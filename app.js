@@ -26,7 +26,9 @@ const lessons = [
       </div>
     `,
     initialCode: `# Напиши свій код нижче\n# Виведи "Hello World" або "Привіт, Бро"\n`,
-    hint: 'Використай команду: <code>print("Hello World")</code> або <code>print("Привіт, Бро")</code>. Зверни увагу на великі літери та лапки!',
+    hints: [
+      'Використай команду: <code>print("Hello World")</code> або <code>print("Привіт, Бро")</code>. Зверни увагу на великі літери та лапки!'
+    ],
     validate: (output, code, terminalLogs) => {
       const cleanOutput = output.trim().toLowerCase();
       return cleanOutput.includes("hello world") || cleanOutput.includes("привіт, бро") || cleanOutput.includes("привит, бро");
@@ -58,7 +60,9 @@ age = 18        # Ціле число (Integer)</code></pre>
       </div>
     `,
     initialCode: `# 1. Створи змінні name та age\n\n# 2. Виведи повне речення, розділяючи змінні комами\n`,
-    hint: 'Твій код має бути схожим на:\n<code>name = "Олег"\nage = 18\nprint("Мене звати", name, "мені", age, "років.")</code>',
+    hints: [
+      'Твій код має бути схожим на:\n<code>name = "Олег"\nage = 18\nprint("Мене звати", name, "мені", age, "років.")</code>'
+    ],
     validate: (output, code, terminalLogs) => {
       const cleanOutput = output.trim().toLowerCase();
       const hasNameVar = /name\s*=\s*(['"][^'"]+['"])/.test(code);
@@ -91,7 +95,9 @@ print("О, ти любиш", hobby, "— це чудово!")</code></pre>
       </div>
     `,
     initialCode: `# 1. Запитай хобі та збережи в змінну\n\n# 2. Виведи фразу "Ого, ... — це круто!"\n`,
-    hint: 'Створи змінну: <code>hobby = input("Твоє хобі: ")</code>, а потім виведи її: <code>print("Ого,", hobby, "— це круто!")</code>',
+    hints: [
+      'Створи змінну: <code>hobby = input("Твоє хобі: ")</code>, а потім виведи її: <code>print("Ого,", hobby, "— це круто!")</code>'
+    ],
     validate: (output, code, terminalLogs) => {
       const cleanOutput = output.toLowerCase();
       const hasInputCall = code.includes("input");
@@ -121,14 +127,18 @@ print("О, ти любиш", hobby, "— це чудово!")</code></pre>
       <pre><code class="language-python">num = int(input())</code></pre>
 
       <div class="instruction-box">
-        <h4>📝 Твоє завдання (Зображення 3):</h4>
+        <h4>📝 Твоє завдання:</h4>
         <p>Задано ціле число <code>N</code>. Напишіть програму, яка буде знаходити <strong>модуль різниці куба та квадрата</strong> числа <code>N</code>.</p>
         <p><em>Формат вхідних даних:</em> на вхід подається одне ціле число N.</p>
         <p><em>Приклади:</em> при введенні <code>5</code> відповідь має бути <code>100</code> (бо |5³ - 5²| = |125 - 25| = 100). При введенні <code>-5</code> відповідь <code>150</code>.</p>
       </div>
     `,
     initialCode: `# 1. Зчитай ціле число N (використай int та input)\n\n# 2. Обчисли модуль різниці його куба та квадрата (використай abs та **)\n\n# 3. Виведи отриманий результат\n`,
-    hint: 'Алгоритм:\n1. <code>n = int(input())</code>\n2. <code>result = abs(n**3 - n**2)</code>\n3. <code>print(result)</code>',
+    hints: [
+      'Функція <code>abs()</code> повертає модуль числа (завжди позитивне). Оператор <code>**</code> — це степінь: <code>n**3</code> — куб, <code>n**2</code> — квадрат.',
+      'Дані з <code>input()</code> завжди текст, тому загорни в <code>int()</code>: <code>n = int(input())</code>. Потім обчисли різницю куба та квадрата.',
+      'Алгоритм:\n1. <code>n = int(input())</code>\n2. <code>result = abs(n**3 - n**2)</code>\n3. <code>print(result)</code>'
+    ],
     validate: (output, code, terminalLogs) => {
       const hasInt = /int\s*\(/.test(code);
       const hasInput = /input\s*\(/.test(code);
@@ -151,43 +161,59 @@ print("О, ти любиш", hobby, "— це чудово!")</code></pre>
   {
     id: 5,
     title: 'Урок 5: "Вибір шляху"',
-    subtitle: 'Умови if/else та логічні порівняння',
+    subtitle: 'Умови if/else — парне чи непарне',
     theory: `
-      <h3>Керування логікою програми 🛡️</h3>
-      <p>Конструкція <code>if / else</code> дозволяє програмі приймати рішення в залежності від виконання умов:</p>
-      <pre><code class="language-python">if умова:
-    # код, який виконується якщо умова істинна
+      <h3>Перші кроки з if/else 🛡️</h3>
+      <p>Конструкція <code>if / else</code> дозволяє програмі робити <strong>вибір</strong> — виконувати різний код залежно від умови. Це як роздоріжжя: програма йде або ліворуч, або праворуч.</p>
+
+      <div class="theory-card">
+        <h4>Базовий синтаксис:</h4>
+        <pre><code class="language-python">if умова:
+    # виконується якщо умова правдива
 else:
-    # код, якщо умова хибна</code></pre>
-      
-      <p>Для перевірки рівності використовується оператор <code>==</code>, а для обчислення остачі від ділення — <code>%</code> (наприклад, <code>x % 3 == 0</code> означає, що число x ділиться на 3 без остачі).</p>
-      
+    # виконується якщо умова хибна</code></pre>
+      </div>
+
+      <p><strong>Важливо:</strong> після умови ставиться <strong>двокрапка (:)</strong>, а код всередині блоку відступає на <strong>4 пробіли</strong>.</p>
+
+      <p>Для порівняння чисел використовують: <code>==</code> (рівно), <code>!=</code> (не рівно), <code>&gt;</code>, <code>&lt;</code>, <code>&gt;=</code>, <code>&lt;=</code>.</p>
+
+      <div class="theory-card">
+        <h4>Приклад — визначити знак числа:</h4>
+        <pre><code class="language-python">n = int(input())
+if n >= 0:
+    print("Невід'ємне")
+else:
+    print("Від'ємне")</code></pre>
+      </div>
+
       <div class="instruction-box">
-        <h4>📝 Твоє завдання (Зображення 1):</h4>
-        <p>Ми стверджуємо, що якщо невідоме ціле число <code>X</code> збільшити втричі, а до результату додати одиницю, то вийде ціле число <code>N</code> (тобто <code>3*X + 1 = N</code>).</p>
-        <p>Напишіть програму, яка отримує на вхід число <code>N</code>. Якщо таке твердження хибне (число X не є цілим), виведіть <code>False statement</code>. Якщо твердження правдиве (X є цілим числом), знайдіть та виведіть число <code>X</code>.</p>
-        <p><em>Приклади:</em> при введенні <code>10</code> відповідь <code>3</code> (бо 3*3+1=10). При введенні <code>11</code> відповідь <code>False statement</code>.</p>
+        <h4>📝 Твоє завдання:</h4>
+        <p>Задано ціле число <code>N</code>. Визнач, чи є воно <strong>парним</strong> чи <strong>непарним</strong>.</p>
+        <p>Підказка: число парне, якщо ділиться на 2 без остачі — перевіряй через <code>N % 2 == 0</code>.</p>
+        <p><em>Приклади:</em> при введенні <code>4</code> виведи <code>Парне</code>. При введенні <code>7</code> виведи <code>Непарне</code>.</p>
       </div>
     `,
-    initialCode: `# 1. Зчитай число N\n\n# 2. Напиши логіку перевірки: якщо (N - 1) ділиться на 3 без остачі, виведи X. Інакше виведи "False statement"\n`,
-    hint: 'Формула для перевірки: <code>(n - 1) % 3 == 0</code>.\nЯкщо умова виконується, то <code>x = (n - 1) // 3</code> і виводимо його. Інакше виводимо <code>"False statement"</code>.',
+    initialCode: `# 1. Зчитай число N\n\n# 2. Якщо N % 2 == 0 — виведи "Парне", інакше — "Непарне"\n`,
+    hints: [
+      'Оператор <code>%</code> повертає <strong>остачу від ділення</strong>. Наприклад: <code>4 % 2 = 0</code> (ділиться рівно — парне), <code>7 % 2 = 1</code> (є остача — непарне). Перевіряй умову: <code>if n % 2 == 0:</code>',
+      'Спочатку зчитай число: <code>n = int(input())</code>. Потім напиши <code>if</code> з умовою на парність і в кожній гілці виводь відповідний текст.',
+      'Структура розв\'язку:<br><br><code>if n % 2 == 0:</code><br><code>&nbsp;&nbsp;&nbsp;&nbsp;print("Парне")</code><br><code>else:</code><br><code>&nbsp;&nbsp;&nbsp;&nbsp;print("Непарне")</code>',
+      'Повний розв\'язок:<br><br><code>n = int(input())</code><br><code>if n % 2 == 0:</code><br><code>&nbsp;&nbsp;&nbsp;&nbsp;print("Парне")</code><br><code>else:</code><br><code>&nbsp;&nbsp;&nbsp;&nbsp;print("Непарне")</code>'
+    ],
     validate: (output, code, terminalLogs) => {
       const hasIf = /\bif\b/.test(code);
       const inputs = terminalLogs.filter(log => log.type === 'input');
       if (inputs.length === 0) return false;
-      
+
       const n = parseInt(inputs[inputs.length - 1].value);
       if (isNaN(n)) return false;
-      
+
       const cleanOutput = output.trim().toLowerCase();
-      const isIntegerX = (n - 1) % 3 === 0;
-      
-      if (isIntegerX) {
-        const expectedX = Math.floor((n - 1) / 3);
-        const lines = cleanOutput.split('\n').map(l => l.trim());
-        return hasIf && lines.some(l => l == expectedX.toString() || l.includes(expectedX.toString()));
+      if (n % 2 === 0) {
+        return hasIf && cleanOutput.includes("парне") && !cleanOutput.includes("непарне");
       } else {
-        return hasIf && cleanOutput.includes("false statement");
+        return hasIf && cleanOutput.includes("непарне");
       }
     }
   },
@@ -204,7 +230,7 @@ else:
       <p>Якщо нам потрібно циклічно повторювати якісь елементи (наприклад, 1, 2, 3, 1, 2, 3...), ми можемо використати остачу від ділення індексу на довжину циклу: <code>(i % 3) + 1</code>.</p>
 
       <div class="instruction-box">
-        <h4>📝 Твоє завдання (Зображення 5):</h4>
+        <h4>📝 Твоє завдання:</h4>
         <p>Розглянемо послідовність, яка утворюється повторенням чисел 1, 2 та 3: <code>1, 2, 3, 1, 2, 3, 1, 2, 3, 1, 2, ...</code></p>
         <p>Задано ціле додатне число <code>N</code>. Напишіть програму, яка виведе перші <code>N</code> елементів цієї послідовності (кожен елемент з нового рядка).</p>
         <p><em>Приклад:</em> при введенні <code>5</code> відповідь має бути:</p>
@@ -212,7 +238,13 @@ else:
       </div>
     `,
     initialCode: `# 1. Зчитай число N\n\n# 2. Використай цикл for та виведи перші N елементів послідовності\n`,
-    hint: 'Запусти цикл: <code>for i in range(n):</code>\nВсередині циклу виведи: <code>print((i % 3) + 1)</code>. Це дасть циклічне чергування 1, 2, 3.',
+    hints: [
+      'Тобі потрібно вивести перші <code>N</code> елементів послідовності 1, 2, 3, 1, 2, 3... Спочатку зчитай N: <code>n = int(input())</code>.',
+      'Для повторення N разів використовуй цикл <code>for i in range(n):</code> — змінна <code>i</code> буде змінюватись від 0 до n-1.',
+      'Щоб отримати 1→2→3→1→2→3... використовуй оператор остачі: <code>(i % 3) + 1</code>. При i=0 дасть 1, при i=1 → 2, при i=2 → 3, при i=3 → знову 1.',
+      'Структура: <code>for i in range(n):</code> → <code>print((i % 3) + 1)</code>',
+      'Повний розв\'язок:<br><br><code>n = int(input())</code><br><code>for i in range(n):</code><br><code>&nbsp;&nbsp;&nbsp;&nbsp;print((i % 3) + 1)</code>'
+    ],
     validate: (output, code, terminalLogs) => {
       const hasLoop = /\b(for|while)\b/.test(code);
       const inputs = terminalLogs.filter(log => log.type === 'input');
@@ -221,13 +253,14 @@ else:
       const n = parseInt(inputs[inputs.length - 1].value);
       if (isNaN(n) || n <= 0) return false;
       
+      const inputValues = inputs.map(inp => inp.value.trim());
       const cleanOutput = output.trim();
       const lines = cleanOutput.split('\n')
                                .map(l => l.trim())
-                               .filter(l => l !== "" && !l.includes(">>>") && !l.includes("введіть"));
-      
+                               .filter(l => l !== "" && !l.includes(">>>") && !l.includes("введіть") && !inputValues.includes(l));
+
       if (lines.length < n) return false;
-      
+
       for (let i = 0; i < n; i++) {
         const expected = (i % 3) + 1;
         if (parseInt(lines[i]) !== expected) return false;
@@ -244,14 +277,19 @@ else:
       <p>Вітаємо! Ти вивчив усі основи Python: змінні, математику, умови та цикли. Тепер настав час вирішити реальні алгоритмічні завдання!</p>
 
       <div class="instruction-box">
-        <h4>📝 Твоє завдання (Зображення 2):</h4>
+        <h4>📝 Твоє завдання:</h4>
         <p>Задано ціле число <code>S</code>. Відомо, що сума трьох послідовних цілих чисел дорівнює <code>S</code>. Напишіть програму, яка знаходитиме ці три послідовні цілі числа.</p>
         <p><em>Формат вихідних даних:</em> Програма повинна вивести у порядку зростання ці три числа <strong>через пробіл</strong> (в один рядок).</p>
         <p><em>Приклади:</em> при введенні <code>12</code> відповідь має бути <code>3 4 5</code> (бо 3+4+5=12). При введенні <code>0</code> відповідь <code>-1 0 1</code>.</p>
       </div>
     `,
     initialCode: `# 1. Зчитай ціле число S\n\n# 2. Знайди три послідовні числа (нехай середнє буде x = S // 3)\n\n# 3. Виведи три числа через пробіл\n`,
-    hint: 'Якщо позначити середнє число як <code>x</code>, то сума трьох послідовних чисел це <code>(x-1) + x + (x+1) = 3*x = S</code>.\nЗвідси <code>x = S // 3</code>. Числа, які треба вивести: <code>x-1</code>, <code>x</code>, <code>x+1</code>.\nВивести їх можна так: <code>print(x-1, x, x+1)</code>',
+    hints: [
+      'Три <strong>послідовні</strong> числа — це числа, що йдуть одне за одним: наприклад 3, 4, 5 або -1, 0, 1. Позначимо середнє як <code>x</code>, тоді три числа: <code>x-1</code>, <code>x</code>, <code>x+1</code>.',
+      'Якщо три числа — <code>x-1</code>, <code>x</code>, <code>x+1</code>, їх сума: <code>(x-1) + x + (x+1) = 3*x</code>. Тобто <code>3*x = S</code>, звідси <code>x = S // 3</code>.',
+      'Знайди середнє число: <code>x = s // 3</code>. Потім виведи всі три через пробіл: <code>print(x-1, x, x+1)</code>.',
+      'Повний розв\'язок:<br><br><code>s = int(input())</code><br><code>x = s // 3</code><br><code>print(x-1, x, x+1)</code>'
+    ],
     validate: (output, code, terminalLogs) => {
       const inputs = terminalLogs.filter(log => log.type === 'input');
       if (inputs.length === 0) return false;
@@ -284,7 +322,7 @@ else:
       <p>Останній виклик поєднує цикли, математику та рядкові перетворення. Тобі потрібно буде перебрати всі можливі варіанти дописування цифр від 0 до 9.</p>
 
       <div class="instruction-box">
-        <h4>📝 Твоє завдання (Зображення 4):</h4>
+        <h4>📝 Твоє завдання:</h4>
         <p>Нехай <code>N</code> — тризначне додатне число. Треба дописати до цього числа справа одну цифру так, щоб отримане чотиризначне число ділилося без остачі на три.</p>
         <p>Напишіть програму, яка за заданим тризначним числом N знаходить <strong>всі кратні трьом чотиризначні числа</strong>, які можна отримати дописуванням однієї цифри.</p>
         <p><em>Формат вихідних даних:</em> Виведіть у порядку зростання всі знайдені чотиризначні числа, кожне з нового рядка.</p>
@@ -293,7 +331,13 @@ else:
       </div>
     `,
     initialCode: `# 1. Зчитай тризначне число N\n\n# 2. Перебери цифри від 0 до 9 (range(10))\n\n# 3. Для кожної цифри сформуй число (N * 10 + digit) та перевір, чи ділиться воно на 3 (% 3 == 0)\n`,
-    hint: 'Запусти цикл: <code>for d in range(10):</code>\nВсередині сформуй число: <code>val = N * 10 + d</code>\nЯкщо <code>val % 3 == 0:</code>, то виводь його на екран!',
+    hints: [
+      'Тобі потрібно перебрати всі цифри від 0 до 9 і перевірити кожну. Для перебору використовуй цикл <code>for d in range(10):</code>.',
+      'Щоб дописати цифру <code>d</code> справа до числа <code>N</code>, використовуй формулу: <code>N * 10 + d</code>. Наприклад: 100 * 10 + 5 = 1005.',
+      'Перевір кратність трьом: <code>if val % 3 == 0:</code>. Якщо ділиться — виводь число <code>print(val)</code>.',
+      'Структура циклу:<br><br><code>for d in range(10):</code><br><code>&nbsp;&nbsp;&nbsp;&nbsp;val = n * 10 + d</code><br><code>&nbsp;&nbsp;&nbsp;&nbsp;if val % 3 == 0:</code><br><code>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;print(val)</code>',
+      'Повний розв\'язок:<br><br><code>n = int(input())</code><br><code>for d in range(10):</code><br><code>&nbsp;&nbsp;&nbsp;&nbsp;val = n * 10 + d</code><br><code>&nbsp;&nbsp;&nbsp;&nbsp;if val % 3 == 0:</code><br><code>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;print(val)</code>'
+    ],
     validate: (output, code, terminalLogs) => {
       const hasLoop = /\b(for|while)\b/.test(code);
       const inputs = terminalLogs.filter(log => log.type === 'input');
@@ -323,6 +367,51 @@ else:
         }
       }
       return false;
+    }
+  },
+  {
+    id: 9,
+    title: 'Домашнє завдання: Обчислення знижки',
+    subtitle: 'Підсумкове практичне завдання',
+    theory: `
+      <h3>Домашнє завдання: Калькулятор знижки 🛍️</h3>
+      <p>Останнє випробування! Тобі потрібно написати програму, яка розраховує кінцеву ціну товару після застосування відсоткової знижки.</p>
+
+      <div class="instruction-box">
+        <h4>📝 Твоє завдання:</h4>
+        <p>На вхід програмі подається два цілих числа (кожне з нового рядка):</p>
+        <ol>
+          <li><code>Price</code> — початкова вартість товару.</li>
+          <li><code>Discount</code> — відсоток знижки (від 0 до 100).</li>
+        </ol>
+        <p>Обчисли та виведи кінцеву ціну товару як число.</p>
+        <p><em>Формула:</em> <code>FinalPrice = Price - (Price * Discount / 100)</code></p>
+        <p><em>Приклад:</em> при введенні <code>100</code> та <code>15</code> програма повинна вивести <code>85.0</code> або <code>85</code>.</p>
+      </div>
+    `,
+    initialCode: `# 1. Зчитай Price та Discount з нових рядків\n\n# 2. Обчисли фінальну ціну\n\n# 3. Виведи результат\n`,
+    hints: [
+      'Тобі потрібно зчитати два числа: кожне окремим <code>int(input())</code>. Перше — ціна, друге — відсоток знижки.',
+      'Формула знижки: <code>знижка_сума = price * discount / 100</code>. Потім фінальна ціна: <code>price - знижка_сума</code>.',
+      'Об\'єднай в один вираз: <code>result = price - (price * discount / 100)</code>. Наприклад: 100 - (100 * 15 / 100) = 100 - 15 = 85.0',
+      'Структура:<br><br><code>price = int(input())</code><br><code>discount = int(input())</code><br><code>result = price - (price * discount / 100)</code><br><code>print(result)</code>',
+      'Повний розв\'язок:<br><br><code>price = int(input())</code><br><code>discount = int(input())</code><br><code>result = price - (price * discount / 100)</code><br><code>print(result)</code>'
+    ],
+    validate: (output, code, terminalLogs) => {
+      const inputs = terminalLogs.filter(log => log.type === 'input');
+      if (inputs.length < 2) return false;
+      
+      const price = parseInt(inputs[0].value);
+      const discount = parseInt(inputs[1].value);
+      if (isNaN(price) || isNaN(discount)) return false;
+      
+      const expected = price - (price * discount / 100);
+      const cleanOutput = output.trim();
+      const numbersInOutput = cleanOutput.split(/[\s\n]+/)
+                                         .map(v => parseFloat(v))
+                                         .filter(v => !isNaN(v));
+                                         
+      return numbersInOutput.some(val => val === expected);
     }
   }
 ];
@@ -494,11 +583,12 @@ while count <= 3:
 
 // STATE MANAGEMENT
 let currentLessonIndex = 0;
-let completedLessons = [false, false, false, false, false, false, false, false];
+let completedLessons = [false, false, false, false, false, false, false, false, false];
 let codeEditor = null;
 let currentRunTerminalLogs = [];
 let accumulatedOutput = "";
 let currentLineElement = null;
+let currentHintIndex = 0;
 
 // Confetti Particle System
 const canvas = document.getElementById('confetti-canvas');
@@ -568,29 +658,39 @@ function startConfetti() {
 // THEME SWITCHER ACCENT SETUP
 const themeColors = {
     indigo: {
-        primary: '#6366f1',
-        primaryGlow: 'rgba(99, 102, 241, 0.18)',
-        primaryBorder: 'rgba(99, 102, 241, 0.4)'
+        accent: '#4f46e5',
+        accentGlow: 'rgba(79, 70, 229, 0.16)',
+        accentBorder: 'rgba(79, 70, 229, 0.32)',
+        accentSoft: 'rgba(79, 70, 229, 0.07)',
+        accentText: '#4338ca'
     },
     emerald: {
-        primary: '#10b981',
-        primaryGlow: 'rgba(16, 185, 129, 0.18)',
-        primaryBorder: 'rgba(16, 185, 129, 0.4)'
+        accent: '#059669',
+        accentGlow: 'rgba(5, 150, 105, 0.18)',
+        accentBorder: 'rgba(5, 150, 105, 0.32)',
+        accentSoft: 'rgba(5, 150, 105, 0.07)',
+        accentText: '#047857'
     },
     rose: {
-        primary: '#f43f5e',
-        primaryGlow: 'rgba(244, 63, 94, 0.18)',
-        primaryBorder: 'rgba(244, 63, 94, 0.4)'
+        accent: '#e11d48',
+        accentGlow: 'rgba(225, 29, 72, 0.18)',
+        accentBorder: 'rgba(225, 29, 72, 0.32)',
+        accentSoft: 'rgba(225, 29, 72, 0.07)',
+        accentText: '#be123c'
     },
     amber: {
-        primary: '#f59e0b',
-        primaryGlow: 'rgba(245, 158, 11, 0.18)',
-        primaryBorder: 'rgba(245, 158, 11, 0.4)'
+        accent: '#d97706',
+        accentGlow: 'rgba(217, 119, 6, 0.18)',
+        accentBorder: 'rgba(217, 119, 6, 0.32)',
+        accentSoft: 'rgba(217, 119, 6, 0.07)',
+        accentText: '#b45309'
     },
     cyan: {
-        primary: '#06b6d4',
-        primaryGlow: 'rgba(6, 182, 212, 0.18)',
-        primaryBorder: 'rgba(6, 182, 212, 0.4)'
+        accent: '#0891b2',
+        accentGlow: 'rgba(8, 145, 178, 0.18)',
+        accentBorder: 'rgba(8, 145, 178, 0.32)',
+        accentSoft: 'rgba(8, 145, 178, 0.07)',
+        accentText: '#0e7490'
     }
 };
 
@@ -598,21 +698,19 @@ function setThemeAccent(colorName) {
     const theme = themeColors[colorName];
     if (!theme) return;
     
-    // Set CSS properties
-    document.documentElement.style.setProperty('--color-primary', theme.primary);
-    document.documentElement.style.setProperty('--color-primary-glow', theme.primaryGlow);
-    document.documentElement.style.setProperty('--color-primary-border', theme.primaryBorder);
+    // Set CSS custom properties (matches new design system variable names)
+    const root = document.documentElement;
+    root.style.setProperty('--accent',        theme.accent);
+    root.style.setProperty('--accent-glow',   theme.accentGlow);
+    root.style.setProperty('--accent-border', theme.accentBorder);
+    root.style.setProperty('--accent-soft',   theme.accentSoft);
+    root.style.setProperty('--accent-text',   theme.accentText);
     
-    // Update active visual button
+    // Update active dot indicator
     document.querySelectorAll('.accent-dot').forEach(dot => {
-        if (dot.getAttribute('data-color') === colorName) {
-            dot.classList.add('active');
-        } else {
-            dot.classList.remove('active');
-        }
+        dot.classList.toggle('active', dot.getAttribute('data-color') === colorName);
     });
     
-    // Save selection
     localStorage.setItem('pycode_theme_color', colorName);
 }
 
@@ -656,15 +754,13 @@ function promptTerminal(promptText) {
             container.appendChild(promptSpan);
         }
         
-        const inputSpan = document.createElement('span');
+        const inputSpan = document.createElement('input');
+        inputSpan.type = 'text';
         inputSpan.className = 'terminal-input-active';
-        inputSpan.contentEditable = true;
-        
-        const cursorSpan = document.createElement('span');
-        cursorSpan.className = 'terminal-cursor';
+        inputSpan.setAttribute('autocomplete', 'off');
+        inputSpan.setAttribute('spellcheck', 'false');
         
         container.appendChild(inputSpan);
-        container.appendChild(cursorSpan);
         body.appendChild(container);
         body.scrollTop = body.scrollHeight;
         
@@ -675,10 +771,9 @@ function promptTerminal(promptText) {
         inputSpan.addEventListener('keydown', function(e) {
             if (e.key === 'Enter') {
                 e.preventDefault();
-                const value = inputSpan.textContent;
+                const value = inputSpan.value;
                 
-                cursorSpan.remove();
-                inputSpan.contentEditable = false;
+                inputSpan.disabled = true;
                 inputSpan.className = 'terminal-input-submitted';
                 inputSpan.style.color = '#e2e8f0';
                 inputSpan.style.fontWeight = 'normal';
@@ -690,6 +785,20 @@ function promptTerminal(promptText) {
                 resolve(value);
             }
         });
+
+        inputSpan.addEventListener('paste', function(e) {
+            const text = (e.clipboardData || window.clipboardData).getData('text');
+            if (text.includes('\n') || text.includes('\r')) {
+                e.preventDefault();
+                const lines = text.split(/\r?\n/);
+                const firstLine = lines[0];
+                
+                inputSpan.value = firstLine;
+                
+                const enterEvent = new KeyboardEvent('keydown', { key: 'Enter', code: 'Enter', bubbles: true });
+                inputSpan.dispatchEvent(enterEvent);
+            }
+        });
     });
 }
 
@@ -699,13 +808,40 @@ function builtinRead(x) {
     return Sk.builtinFiles["files"][x];
 }
 
+// HINT RENDERER
+function renderHint(index) {
+    const hints = lessons[currentLessonIndex].hints;
+    const total = hints.length;
+
+    const counter = document.getElementById('hint-counter');
+    if (total > 1) {
+        counter.textContent = `${index + 1} / ${total}`;
+        counter.style.display = 'inline-block';
+    } else {
+        counter.style.display = 'none';
+    }
+
+    document.getElementById('hint-modal-body').innerHTML = `
+        <div class="hint-text-box">${hints[index]}</div>
+    `;
+
+    const prevBtn = document.getElementById('prev-hint-btn');
+    const nextBtn = document.getElementById('next-hint-btn');
+    const closeFooter = document.getElementById('close-hint-footer-btn');
+
+    prevBtn.style.display = index > 0 ? 'inline-flex' : 'none';
+    const isLast = index === total - 1;
+    nextBtn.style.display = isLast ? 'none' : 'inline-flex';
+    closeFooter.style.display = isLast ? 'inline-flex' : 'none';
+}
+
 // APP ACTIONS
 function initApp() {
     // 1. Initialize CodeMirror
     const textarea = document.getElementById('code-textarea');
     codeEditor = CodeMirror.fromTextArea(textarea, {
         mode: { name: "python", version: 3 },
-        theme: "material-ocean",
+        theme: "eclipse",
         lineNumbers: true,
         indentUnit: 4,
         tabSize: 4,
@@ -750,20 +886,33 @@ function initApp() {
     const showHintBtn = document.getElementById('show-hint-btn');
     const closeHintBtn = document.getElementById('close-hint-btn');
     const closeHintFooterBtn = document.getElementById('close-hint-footer-btn');
+    const prevHintBtn = document.getElementById('prev-hint-btn');
+    const nextHintBtn = document.getElementById('next-hint-btn');
 
     const openHintModal = () => {
-        const lesson = lessons[currentLessonIndex];
-        document.getElementById('hint-modal-body').innerHTML = `
-            <div class="hint-text-box">
-                ${lesson.hint}
-            </div>
-        `;
+        currentHintIndex = 0;
+        renderHint(0);
         hintModal.classList.add('open');
     };
 
     const closeHintModal = () => {
         hintModal.classList.remove('open');
     };
+
+    prevHintBtn.addEventListener('click', () => {
+        if (currentHintIndex > 0) {
+            currentHintIndex--;
+            renderHint(currentHintIndex);
+        }
+    });
+
+    nextHintBtn.addEventListener('click', () => {
+        const hints = lessons[currentLessonIndex].hints;
+        if (currentHintIndex < hints.length - 1) {
+            currentHintIndex++;
+            renderHint(currentHintIndex);
+        }
+    });
 
     showHintBtn.addEventListener('click', openHintModal);
     closeHintBtn.addEventListener('click', closeHintModal);
@@ -808,6 +957,74 @@ function initApp() {
     document.getElementById('reset-btn').addEventListener('click', resetCurrentCode);
     document.getElementById('next-btn').addEventListener('click', loadNextLesson);
     document.getElementById('clear-terminal-btn').addEventListener('click', clearTerminal);
+
+    // 8. Terminal interaction and copy-paste shortcuts
+    const terminalBody = document.getElementById('terminal-body');
+    if (terminalBody) {
+        terminalBody.addEventListener('click', (e) => {
+            const activeInput = document.querySelector('.terminal-input-active');
+            if (!activeInput) return;
+
+            // If the user clicked directly inside the active input, do NOT interfere with selection or cursor positioning!
+            if (e.target === activeInput || activeInput.contains(e.target)) {
+                return;
+            }
+
+            // If the user is selecting text (click and drag), do not interfere
+            const selection = window.getSelection();
+            if (selection && selection.toString().trim() !== "") {
+                return;
+            }
+
+            activeInput.focus();
+            const valLen = activeInput.value.length;
+            activeInput.setSelectionRange(valLen, valLen);
+        });
+    }
+
+    // Global keydown for active terminal input redirection
+    document.addEventListener('keydown', function(e) {
+        const activeInput = document.querySelector('.terminal-input-active');
+        if (!activeInput) return; // Only redirect if there is an active terminal prompt
+
+        // Determine if focus is inside another input/editable element
+        const target = e.target;
+        const isEditable = target.tagName === 'INPUT' || 
+                           target.tagName === 'TEXTAREA' || 
+                           target.isContentEditable || 
+                           target.closest('.CodeMirror') ||
+                           target.closest('.modal-card');
+                           
+        if (isEditable) return; // Keep focus on CodeMirror / inputs
+
+        const isMeta = e.ctrlKey || e.metaKey;
+        const isShift = e.shiftKey;
+
+        // Redirect Paste (Ctrl+V, Cmd+V, Shift+Insert)
+        if ((isMeta && e.key.toLowerCase() === 'v') || (isShift && e.key === 'Insert')) {
+            activeInput.focus();
+            const valLen = activeInput.value.length;
+            activeInput.setSelectionRange(valLen, valLen);
+            // Let the native paste event fire on the newly focused activeInput
+            return;
+        }
+
+        // Redirect Select All (Ctrl+A / Cmd+A)
+        if (isMeta && e.key.toLowerCase() === 'a') {
+            e.preventDefault();
+            activeInput.focus();
+            activeInput.select();
+            return;
+        }
+
+        // Redirect typing: Any standard printable single character
+        if (!isMeta && !e.altKey && e.key.length === 1) {
+            activeInput.focus();
+            const valLen = activeInput.value.length;
+            activeInput.setSelectionRange(valLen, valLen);
+            // Let the native typing event fire on the newly focused activeInput
+        }
+    });
 }
 
 function loadHandbookTab(tabKey) {
@@ -852,8 +1069,11 @@ function loadLesson(index) {
     } else if (index < 6) {
         levelBadge.textContent = 'Рівень: Основи ⚙️';
         levelBadge.className = 'badge badge-blue';
-    } else {
+    } else if (index < 8) {
         levelBadge.textContent = 'Рівень: Виклики 🏆';
+        levelBadge.className = 'badge badge-indigo';
+    } else {
+        levelBadge.textContent = 'Домашнє завдання 🏠';
         levelBadge.className = 'badge badge-indigo';
     }
     
@@ -865,7 +1085,7 @@ function loadLesson(index) {
     theoryContent.classList.add('fade-in-up');
     
     theoryContent.innerHTML = `
-        <span style="font-size:0.85rem; font-weight:600; text-transform:uppercase; color:var(--color-primary); letter-spacing:0.5px; transition: var(--transition-smooth);">${lesson.subtitle}</span>
+        <span style="font-size:0.73rem; font-weight:700; text-transform:uppercase; color:var(--accent); letter-spacing:0.8px; opacity:0.85;">${lesson.subtitle}</span>
         ${lesson.theory}
     `;
     theoryContent.scrollTop = 0;
@@ -978,7 +1198,13 @@ function handleLessonSuccess() {
     completedLessons[currentLessonIndex] = true;
     saveProgress();
     
-    printToTerminal("Вітання! Завдання виконано правильно! 🎉\n", "success");
+    // Check if this is the last lesson (homework)
+    if (currentLessonIndex === lessons.length - 1) {
+        printToTerminal("Вітання! Завдання виконано правильно! 🎉\n", "success");
+        printToTerminal("Усі завдання курсу завершено! Твій секретний код: 9y9 🔑\n", "success");
+    } else {
+        printToTerminal("Вітання! Завдання виконано правильно! 🎉\n", "success");
+    }
     startConfetti();
     
     renderProgressPills();

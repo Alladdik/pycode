@@ -12,7 +12,7 @@
     
     <!-- CodeMirror 5 CDN -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.12/codemirror.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.12/theme/material-ocean.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.12/theme/eclipse.min.css">
     
     <!-- Custom CSS -->
     <link rel="stylesheet" href="style.css">
@@ -25,14 +25,19 @@
     <div id="hint-modal" class="modal-overlay">
         <div class="modal-card">
             <div class="modal-header">
-                <h3>💡 Підказка до уроку</h3>
+                <h3>💡 Підказки до уроку</h3>
+                <span id="hint-counter" class="hint-counter-badge"></span>
                 <button id="close-hint-btn" class="modal-close-btn">&times;</button>
             </div>
             <div class="modal-body" id="hint-modal-body">
                 <!-- Hint text injected dynamically -->
             </div>
-            <div class="modal-footer">
-                <button id="close-hint-footer-btn" class="btn btn-primary btn-sm">Зрозуміло, спробую!</button>
+            <div class="modal-footer hint-footer">
+                <button id="prev-hint-btn" class="btn btn-secondary btn-sm">← Назад</button>
+                <div class="hint-footer-right">
+                    <button id="next-hint-btn" class="btn btn-primary btn-sm">Наступна підказка →</button>
+                    <button id="close-hint-footer-btn" class="btn btn-success btn-sm">Зрозуміло!</button>
+                </div>
             </div>
         </div>
     </div>
@@ -101,7 +106,7 @@
             <section class="panel panel-left theory-panel">
                 <div class="panel-header">
                     <h2>📚 Навчальний матеріал</h2>
-                    <span id="lesson-indicator" class="badge badge-blue">Урок 1/8</span>
+                    <span id="lesson-indicator" class="badge badge-blue">Урок 1/9</span>
                 </div>
                 
                 <div class="panel-body scrollable" id="theory-content">
@@ -114,7 +119,7 @@
                 
                 <!-- IDE Section -->
                 <div class="ide-container">
-                    <div class="panel-header ide-header">
+                    <div class="ide-header">
                         <div class="file-name">
                             <span class="file-icon">📄</span>
                             <span>main.py</span>
