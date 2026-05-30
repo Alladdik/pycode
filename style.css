@@ -820,15 +820,19 @@ code {
 
 .drawer-tabs {
     display: flex; gap: 4px;
-    padding: 0.7rem 1.2rem;
+    padding: 0.65rem 1rem;
     border-bottom: 1px solid var(--border);
     background: var(--bg-panel-raised);
     overflow-x: auto; flex-shrink: 0;
+    scrollbar-width: thin;
+    scrollbar-color: var(--border-hover) transparent;
 }
-.drawer-tabs::-webkit-scrollbar { height: 3px; }
+.drawer-tabs::-webkit-scrollbar { height: 4px; }
+.drawer-tabs::-webkit-scrollbar-track { background: transparent; }
+.drawer-tabs::-webkit-scrollbar-thumb { background: var(--border-hover); border-radius: 999px; }
 .tab-btn {
-    flex: 1; min-width: 0;
-    padding: 0.5rem 0.5rem;
+    flex: 0 0 auto;
+    padding: 0.42rem 0.85rem;
     background: transparent;
     border: 1px solid transparent;
     border-radius: var(--r-sm);
@@ -836,12 +840,14 @@ code {
     color: var(--text-muted);
     cursor: pointer; transition: var(--ease);
     white-space: nowrap; text-align: center;
+    display: flex; align-items: center; gap: 0.3rem;
+    line-height: 1;
 }
-.tab-btn:hover { color: var(--text-primary); background: var(--accent-soft); }
+.tab-btn:hover { color: var(--text-primary); background: var(--accent-soft); border-color: var(--accent-border); }
 .tab-btn.active {
-    background: var(--accent-soft);
-    border-color: var(--accent-border);
-    color: var(--accent-text);
+    background: var(--accent);
+    border-color: var(--accent);
+    color: #fff;
     box-shadow: 0 2px 8px var(--accent-glow);
 }
 
@@ -906,16 +912,173 @@ code {
 }
 
 /* ===================================================================
-   RESPONSIVE
+   RESPONSIVE — TABLET (≤ 1024px)
    =================================================================== */
 @media (max-width: 1024px) {
+    .app-container { height: auto; min-height: 100vh; }
     .workspace {
         grid-template-columns: 1fr;
-        height: auto; overflow-y: auto; gap: 1rem;
+        height: auto;
+        overflow: visible;
+        gap: 0.8rem;
         padding: 0.8rem;
     }
-    .panel-left { height: 560px; }
-    .interactive-panel { grid-template-rows: 380px 280px; }
+    .panel-left { height: 520px; }
+    .interactive-panel { grid-template-rows: 360px 260px; }
     .drawer-content { width: 100%; right: -100%; }
     .progress-title { display: none; }
+}
+
+/* ===================================================================
+   RESPONSIVE — MOBILE (≤ 640px)
+   =================================================================== */
+@media (max-width: 640px) {
+
+    /* --- Base: дозволяємо скрол всієї сторінки --- */
+    html { font-size: 14px; }
+    body { overflow-y: auto; overflow-x: hidden; }
+    .app-container { height: auto; min-height: 100dvh; }
+
+    /* --- Navbar: один компактний рядок --- */
+    .navbar {
+        height: auto;
+        min-height: 3rem;
+        padding: 0.45rem 0.75rem;
+        flex-wrap: nowrap;
+        gap: 0.35rem;
+        justify-content: space-between;
+    }
+    .logo-text { font-size: 0.95rem; }
+    .logo-icon { font-size: 1.2rem; }
+    .logo { gap: 0.35rem; }
+
+    /* Прогрес — приховати назву, зменшити кружечки */
+    .progress-title { display: none; }
+    .step-pill { width: 24px; height: 24px; font-size: 0.65rem; }
+    /* Прогрес — повністю прибрати на мобілі */
+    .progress-container { display: none; }
+
+    /* Navbar-right: компактний в одному рядку */
+    .navbar-right {
+        gap: 0.3rem;
+        flex-wrap: nowrap;
+        flex-shrink: 0;
+    }
+
+    /* Кнопки навігації між модулями */
+    .navbar-right > .btn {
+        font-size: 0.68rem;
+        padding: 0.28rem 0.5rem;
+    }
+
+    /* Кольори акценту і бейдж — прибрати на мобілі */
+    .theme-switcher { display: none; }
+    .user-stats { display: none; }
+
+    /* --- Workspace: скрол сторінки показує і редактор і термінал --- */
+    .workspace {
+        grid-template-columns: 1fr;
+        height: auto;
+        overflow: visible;
+        gap: 0.6rem;
+        padding: 0.6rem;
+    }
+
+    /* --- Theory panel --- */
+    .panel-left { height: 50vh; min-height: 280px; max-height: 420px; }
+    .panel-header { padding: 0.65rem 0.9rem; }
+    .panel-header h2 { font-size: 0.88rem; }
+    .panel-body { padding: 0.9rem; }
+
+    #theory-content h3 { font-size: 1.1rem; }
+    #theory-content p, #theory-content li { font-size: 0.83rem; }
+    .theory-card { padding: 0.7rem 0.85rem; }
+    .instruction-box { padding: 0.8rem 0.9rem; }
+    .instruction-box h4 { font-size: 0.84rem; }
+
+    /* --- IDE + Terminal --- */
+    .interactive-panel {
+        grid-template-rows: 300px 200px;
+        gap: 0.6rem;
+    }
+
+    .ide-header { padding: 0.5rem 0.75rem !important; }
+    .file-name { font-size: 0.78rem; }
+
+    /* Кнопка скинути — прибрати текст, залишити іконку */
+    #reset-btn span { display: none; }
+    #reset-btn { padding: 0.35rem 0.55rem !important; }
+
+    /* Control bar */
+    .control-bar { padding: 0.5rem 0.75rem !important; gap: 0.4rem; }
+    .control-left { gap: 0.35rem; }
+
+    /* Кнопки запуску і підказки */
+    #run-btn { padding: 0.5rem 0.85rem; font-size: 0.78rem; }
+    #run-btn .icon-play { width: 15px; height: 15px; }
+    #show-hint-btn { padding: 0.5rem 0.7rem; font-size: 0.78rem; }
+    #next-btn { padding: 0.5rem 0.75rem; font-size: 0.78rem; }
+    #next-btn svg { width: 15px; height: 15px; }
+
+    /* Terminal */
+    .terminal-body { padding: 0.75rem; font-size: 0.79rem; }
+    .terminal-title { font-size: 0.65rem; }
+
+    /* CodeMirror */
+    .CodeMirror { font-size: 0.82rem !important; }
+
+    /* --- Handbook drawer --- */
+    .drawer-content {
+        width: 100%;
+        right: -100%;
+        border-left: none;
+        border-radius: var(--r-lg) var(--r-lg) 0 0;
+        height: 92dvh;
+        top: auto;
+        bottom: 0;
+        right: 0;
+        transform: translateY(100%);
+        transition: transform 0.36s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    /* На мобілі ховаємо через translateY замість right */
+    .drawer-overlay.open .drawer-content {
+        transform: translateY(0);
+        right: 0;
+    }
+
+    .drawer-header { padding: 1rem 1.1rem; }
+    .drawer-header h2 { font-size: 1.1rem; }
+    .drawer-body { padding: 1rem; }
+
+    /* Таби довідника на мобілі — дрібніші */
+    .drawer-tabs { padding: 0.5rem 0.75rem; gap: 3px; }
+    .tab-btn { padding: 0.35rem 0.65rem; font-size: 0.7rem; }
+
+    /* --- Hint modal --- */
+    .modal-card { width: 96%; max-width: 100%; border-radius: var(--r-lg); }
+    .modal-header { padding: 0.9rem 1.1rem; }
+    .modal-header h3 { font-size: 0.95rem; }
+    .modal-body { padding: 1rem 1.1rem; }
+    .modal-footer { padding: 0.7rem 1.1rem; }
+    .modal-body .hint-text-box { font-size: 0.83rem; }
+    #prev-hint-btn, #next-hint-btn, #close-hint-footer-btn {
+        font-size: 0.75rem;
+        padding: 0.35rem 0.65rem;
+    }
+
+    /* --- Кнопка довідника в navbar --- */
+    #handbook-btn span { font-size: 0.72rem; }
+}
+
+/* ===================================================================
+   RESPONSIVE — SMALL MOBILE (≤ 380px)
+   =================================================================== */
+@media (max-width: 380px) {
+    .step-pill { width: 20px; height: 20px; font-size: 0.58rem; }
+
+    /* Прибрати кнопки модулів зі navbar якщо тісно */
+    .navbar-right > .btn:not(#handbook-btn) { font-size: 0.68rem; padding: 0.28rem 0.5rem; }
+
+    .interactive-panel { grid-template-rows: 260px 180px; }
+    .panel-left { height: 44vh; min-height: 240px; }
 }

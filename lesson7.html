@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PyCode Hub — Модуль 7: Задачі 1 і 4</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600&family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.12/codemirror.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.12/theme/eclipse.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <canvas id="confetti-canvas"></canvas>
+    <div id="hint-modal" class="modal-overlay"><div class="modal-card"><div class="modal-header"><h3>💡 Підказки</h3><span id="hint-counter" class="hint-counter-badge"></span><button id="close-hint-btn" class="modal-close-btn">&times;</button></div><div class="modal-body" id="hint-modal-body"></div><div class="modal-footer hint-footer"><button id="prev-hint-btn" class="btn btn-secondary btn-sm">← Назад</button><div class="hint-footer-right"><button id="next-hint-btn" class="btn btn-primary btn-sm">Наступна →</button><button id="close-hint-footer-btn" class="btn btn-success btn-sm">Зрозуміло!</button></div></div></div></div>
+    <div id="handbook-drawer" class="drawer-overlay"><div class="drawer-content"><div class="drawer-header"><h2>📖 Довідник Python</h2><button id="close-handbook-btn" class="drawer-close-btn">&times;</button></div><div class="drawer-tabs"><button class="tab-btn active" data-tab="variables">📦 Змінні</button><button class="tab-btn" data-tab="math">🧮 Математика</button><button class="tab-btn" data-tab="logic">🛡️ Умови</button><button class="tab-btn" data-tab="loops">🔄 Цикли</button><button class="tab-btn" data-tab="functions">🔢 Функції</button></div><div class="drawer-body scrollable" id="handbook-body"></div></div></div>
+    <div class="app-container">
+        <header class="navbar">
+            <div class="logo"><span class="logo-icon">🐍</span><span class="logo-text">PyCode Hub</span></div>
+            <div class="progress-container"><span class="progress-title">Твій прогрес:</span><div class="progress-steps" id="progress-steps"></div></div>
+            <div class="navbar-right">
+                <button class="btn btn-secondary btn-sm" onclick="window.location.href='lesson6.html'">← Модуль 6</button>
+                <button class="btn btn-primary btn-sm" onclick="window.location.href='lesson8.html'">Модуль 8 →</button>
+                <button id="handbook-btn" class="btn btn-secondary btn-sm btn-handbook"><span>📖 Довідник</span></button>
+                <div class="theme-switcher"><span class="theme-label">🎨</span><div class="accent-colors"><button class="accent-dot active" data-color="indigo" style="background-color:#6366f1"></button><button class="accent-dot" data-color="emerald" style="background-color:#10b981"></button><button class="accent-dot" data-color="rose" style="background-color:#f43f5e"></button><button class="accent-dot" data-color="amber" style="background-color:#f59e0b"></button><button class="accent-dot" data-color="cyan" style="background-color:#06b6d4"></button></div></div>
+                <div class="user-stats"><span id="level-badge" class="badge badge-indigo">Задача Штурм 🏆</span></div>
+            </div>
+        </header>
+        <main class="workspace">
+            <section class="panel panel-left theory-panel"><div class="panel-header"><h2>📚 Навчальний матеріал</h2><span id="lesson-indicator" class="badge badge-blue">Урок 1/9</span></div><div class="panel-body scrollable" id="theory-content"></div></section>
+            <section class="panel panel-right interactive-panel">
+                <div class="ide-container"><div class="ide-header"><div class="file-name"><span class="file-icon">📄</span><span>main.py</span></div><div class="editor-actions"><button id="reset-btn" class="btn btn-secondary btn-sm"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/></svg><span>Скинути</span></button></div></div><div class="editor-wrapper"><textarea id="code-textarea"></textarea></div><div class="control-bar"><div class="control-left"><button id="run-btn" class="btn btn-success"><svg class="icon-play" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg><span>Запустити код</span></button><button id="show-hint-btn" class="btn btn-secondary"><span>💡 Підказка</span></button></div><button id="next-btn" class="btn btn-primary" disabled><span>Наступний урок</span><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></button></div></div>
+                <div class="terminal-container"><div class="panel-header terminal-header"><div class="window-dots"><span class="dot dot-red"></span><span class="dot dot-yellow"></span><span class="dot dot-green"></span></div><div class="terminal-title">Термінал виводу</div><button id="clear-terminal-btn" class="btn-clear-terminal">Очистити</button></div><div class="terminal-body scrollable" id="terminal-body"><div class="terminal-welcome">Результат коду з'явиться тут...</div></div></div>
+            </section>
+        </main>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.12/codemirror.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.12/mode/python/python.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/skulpt@1.2.0/dist/skulpt.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/skulpt@1.2.0/dist/skulpt-stdlib.js"></script>
+    <script src="lesson7-data.js"></script>
+    <script src="engine.js"></script>
+</body>
+</html>
