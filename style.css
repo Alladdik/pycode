@@ -187,7 +187,17 @@ body::before, body::after { display: none; }
 }
 .step-pill.completed::after { content: '✓'; font-size: 0.72rem; }
 .step-pill.completed { font-size: 0; }
-.step-pill.locked { opacity: 0.35; cursor: not-allowed; pointer-events: none; }
+@keyframes spin { to { transform: rotate(360deg); } }
+.run-spinner {
+    display: inline-block;
+    width: 14px; height: 14px;
+    border: 2px solid rgba(255,255,255,0.35);
+    border-top-color: #fff;
+    border-radius: 50%;
+    animation: spin 0.7s linear infinite;
+    flex-shrink: 0;
+}
+
 
 /* Navbar right */
 .navbar-right { display: flex; align-items: center; gap: 0.85rem; flex-shrink: 0; }

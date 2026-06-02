@@ -110,7 +110,7 @@ print("Прийнято!")</code></pre>
       </div>
       <div class="instruction-box">
         <h4>📝 Твоє завдання:</h4>
-        <p>Напиши програму-замок: правильний пароль — <code>"python"</code>. Програма повинна повторно запитувати, поки користувач не введе правильне слово. Після успіху: <code>Доступ надано! 🔑</code></p>
+        <p>Напиши програму-замок: правильний пароль — <code>"python"</code>. Програма повинна повторно запитувати, поки користувач не введе правильне слово. Після успіху виведи будь-яке повідомлення.</p>
       </div>
     `,
     initialCode: `correct_password = "python"
@@ -118,20 +118,18 @@ entered = ""  # стартове значення — точно не "python"
 
 # Напиши while цикл: поки entered != correct_password
 # Всередині: entered = input("Введи пароль: ")
-
-print("Доступ надано! 🔑")
+# Після циклу — виведи будь-яке повідомлення про успіх
 `,
     hints: [
       'Умова: <code>while entered != correct_password:</code>. Всередині: <code>entered = input("Введи пароль: ")</code>.',
-      'Рядок <code>print("Доступ надано!")</code> вже є — він виконається автоматично після виходу з циклу.',
+      'Після циклу напиши будь-який <code>print()</code> з повідомленням — наприклад <code>print("Вхід успішний!")</code>.',
       'Готовий блок:<br><code>while entered != correct_password:</code><br><code>&nbsp;&nbsp;&nbsp;&nbsp;entered = input("Введи пароль: ")</code>'
     ],
     validate: (output, code, terminalLogs) => {
       if (!/\bwhile\b/.test(code) || !/!=/.test(code)) return false;
       const inputs = terminalLogs.filter(l => l.type === 'input');
       if (!inputs.length) return false;
-      if (inputs[inputs.length - 1].value.trim() !== 'python') return false;
-      return output.trim().toLowerCase().includes('доступ') || output.includes('🔑');
+      return inputs[inputs.length - 1].value.trim() === 'python';
     }
   },
   {
@@ -151,7 +149,7 @@ print("Вгадав! 🎉")</code></pre>
       </div>
       <div class="instruction-box">
         <h4>📝 Твоє завдання:</h4>
-        <p>Змінні <code>secret = 15</code> і <code>guess = 0</code> вже є. Напиши <code>while</code> цикл, який запитує числа поки не введено 15. Після вгадування виведи <code>Вгадав! Це число 15! 🎉</code></p>
+        <p>Змінні <code>secret = 15</code> і <code>guess = 0</code> вже є. Напиши <code>while</code> цикл, який запитує числа поки не введено 15. Після вгадування виведи будь-яке повідомлення.</p>
       </div>
     `,
     initialCode: `secret = 15
@@ -160,20 +158,18 @@ guess = 0
 print("Я загадав число від 1 до 20. Вгадай!")
 
 # Напиши while цикл: поки guess != secret, зчитуй нове guess
-
-print("Вгадав! Це число 15! 🎉")
+# Після циклу — виведи будь-яке повідомлення про перемогу
 `,
     hints: [
       'Напиши: <code>while guess != secret:</code> і всередині: <code>guess = int(input("Число: "))</code>.',
-      'Рядок з "Вгадав!" вже після циклу — не трогай його. Він виконається коли цикл завершиться.',
+      'Після циклу напиши будь-який <code>print()</code> з повідомленням про перемогу — будь-який текст зарахується.',
       'Повний цикл:<br><code>while guess != secret:</code><br><code>&nbsp;&nbsp;&nbsp;&nbsp;guess = int(input("Число: "))</code>'
     ],
     validate: (output, code, terminalLogs) => {
       if (!/\bwhile\b/.test(code) || !/!=/.test(code)) return false;
       const inputs = terminalLogs.filter(l => l.type === 'input');
       if (!inputs.length) return false;
-      if (parseInt(inputs[inputs.length - 1].value) !== 15) return false;
-      return output.trim().toLowerCase().includes('вгадав') || output.includes('🎉');
+      return parseInt(inputs[inputs.length - 1].value) === 15;
     }
   },
   {
@@ -205,8 +201,7 @@ print("Число від 1 до 50. Вгадай!")
 while guess != secret:
     guess = int(input("Твоя спроба: "))
     # Напиши підказки: if guess < secret і elif guess > secret
-
-print("Ура! 🎉")
+# Після циклу — виведи будь-яке повідомлення про перемогу
 `,
     hints: [
       'Після рядка <code>guess = int(input(...))</code> додай:<br><code>if guess &lt; secret:</code><br><code>&nbsp;&nbsp;&nbsp;&nbsp;print("Більше! ↑")</code>',
@@ -217,8 +212,7 @@ print("Ура! 🎉")
       if (!/\bwhile\b/.test(code) || !/\belif\b/.test(code)) return false;
       const inputs = terminalLogs.filter(l => l.type === 'input');
       if (!inputs.length) return false;
-      if (parseInt(inputs[inputs.length - 1].value) !== 37) return false;
-      return output.trim().toLowerCase().includes('ура') || output.includes('🎉');
+      return parseInt(inputs[inputs.length - 1].value) === 37;
     }
   },
   {
@@ -386,15 +380,9 @@ count = 0
 
 print("Число від 1 до 50. Введи 0 щоб здатися.")
 
-# Напиши цикл while guess != secret:
-# Всередині:
-# 1. guess = int(input("Спроба: "))
-# 2. count += 1
-# 3. if guess == 0: print(f"Здався після {count} спроб 😔") та break
-# 4. elif guess < secret: print("Більше! ↑")
-# 5. elif guess > secret: print("Менше! ↓")
-
-# Після циклу — виведи результат перемоги
+# Напиши while цикл: поки guess != secret
+# Всередині: введення, лічильник, перевірка на 0 (break), підказки
+# Після циклу — виведи результат (перемога або здача)
 `,
     hints: [
       'Почни: <code>while guess != secret:</code>. Перший рядок всередині: <code>guess = int(input("Спроба: "))</code>. Другий: <code>count += 1</code>.',
@@ -405,11 +393,9 @@ print("Число від 1 до 50. Введи 0 щоб здатися.")
       if (!/\bwhile\b/.test(code) || !/\bbreak\b/.test(code)) return false;
       const inputs = terminalLogs.filter(l => l.type === 'input');
       if (!inputs.length) return false;
-      const count = inputs.length;
       const last = parseInt(inputs[inputs.length - 1].value);
-      const out = output.trim().toLowerCase();
-      if (last === 0) return out.includes('здав') && out.includes(String(count));
-      if (last === 42) return (out.includes('вгадав') || out.includes('🎉')) && out.includes(String(count));
+      if (last === 0) return output.trim().length > 0;
+      if (last === 42) return output.trim().length > 0;
       return false;
     }
   }

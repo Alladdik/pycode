@@ -107,7 +107,6 @@ function promptTerminal(promptText) {
         inp.disabled = true; inp.className = 'terminal-input-submitted';
         inp.style.color = '#e2e8f0'; inp.style.fontWeight = 'normal';
         currentRunTerminalLogs.push({ type: 'input', value });
-        accumulatedOutput += value + '\n';
         currentLineElement = null;
         resolve(value);
       }
@@ -183,6 +182,18 @@ function initApp() {
   document.getElementById('next-btn').addEventListener('click', loadNextLesson);
   document.getElementById('clear-terminal-btn').addEventListener('click', clearTerminal);
 
+  document.addEventListener('keydown', e => {
+    if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+      e.preventDefault();
+      const runBtn = document.getElementById('run-btn');
+      if (!runBtn.disabled) runCurrentCode();
+    }
+    if (e.key === 'Escape') {
+      document.getElementById('hint-modal').classList.remove('open');
+      document.getElementById('handbook-drawer').classList.remove('open');
+    }
+  });
+
   const tb = document.getElementById('terminal-body');
   if (tb) {
     tb.addEventListener('click', e => {
@@ -253,21 +264,21 @@ function renderProgressPills() {
     const p = document.createElement('div'); p.className = 'step-pill'; p.textContent = l.id;
     if (i === currentLessonIndex) p.classList.add('active');
     if (completedLessons[i]) p.classList.add('completed');
-    let locked = i > 0 && !completedLessons[i-1] && i !== currentLessonIndex;
-    if (locked) p.classList.add('locked');
-    else p.addEventListener('click', () => loadLesson(i));
+    p.addEventListener('click', () => loadLesson(i));
     c.appendChild(p);
   });
 }
 function updateNextButtonState() {
   const nb = document.getElementById('next-btn');
-  if (completedLessons[currentLessonIndex] && currentLessonIndex < lessons.length-1) nb.removeAttribute('disabled');
+  if (currentLessonIndex < lessons.length - 1) nb.removeAttribute('disabled');
   else nb.setAttribute('disabled', 'true');
 }
 
 function runCurrentCode() {
   const code = codeEditor.getValue();
-  const runBtn = document.getElementById('run-btn'); runBtn.disabled = true;
+  const runBtn = document.getElementById('run-btn');
+  runBtn.disabled = true;
+  runBtn.innerHTML = '<span class="run-spinner"></span><span>Виконання...</span>';
   currentRunTerminalLogs = []; accumulatedOutput = ""; currentLineElement = null;
   const body = document.getElementById('terminal-body'); body.innerHTML = '';
   printToTerminal(">>> Запуск програми...\n", "system");
@@ -275,15 +286,19 @@ function runCurrentCode() {
     output: t => { accumulatedOutput += t; printToTerminal(t, 'output'); },
     read: builtinRead, inputfun: promptTerminal, inputfunTakesPrompt: true, __future__: Sk.python3
   });
+  const resetRunBtn = () => {
+    runBtn.disabled = false;
+    runBtn.innerHTML = '<svg class="icon-play" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg><span>Запустити код</span>';
+  };
   Sk.misceval.asyncToPromise(() => Sk.importMainWithBody("<stdin>", false, code, true))
     .then(() => {
       printToTerminal("\n>>> Програма завершилась успішно.\n", "system");
-      runBtn.disabled = false;
+      resetRunBtn();
       const isValid = lessons[currentLessonIndex].validate(accumulatedOutput, code, currentRunTerminalLogs);
       if (isValid) handleLessonSuccess();
       else printToTerminal("Результат невірний. Перевір завдання та спробуй ще раз! ❌\n", "error");
     })
-    .catch(err => { printToTerminal("\nПомилка:\n" + err.toString() + "\n", "error"); runBtn.disabled = false; });
+    .catch(err => { printToTerminal("\nПомилка:\n" + err.toString() + "\n", "error"); resetRunBtn(); });
 }
 
 function handleLessonSuccess() {

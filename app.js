@@ -779,8 +779,6 @@ function promptTerminal(promptText) {
                 inputSpan.style.fontWeight = 'normal';
                 
                 currentRunTerminalLogs.push({ type: 'input', value: value });
-                accumulatedOutput += value + '\n';
-                
                 currentLineElement = null;
                 resolve(value);
             }
@@ -958,6 +956,18 @@ function initApp() {
     document.getElementById('next-btn').addEventListener('click', loadNextLesson);
     document.getElementById('clear-terminal-btn').addEventListener('click', clearTerminal);
 
+    document.addEventListener('keydown', e => {
+        if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+            e.preventDefault();
+            const runBtn = document.getElementById('run-btn');
+            if (!runBtn.disabled) runCurrentCode();
+        }
+        if (e.key === 'Escape') {
+            document.getElementById('hint-modal').classList.remove('open');
+            document.getElementById('handbook-drawer').classList.remove('open');
+        }
+    });
+
     // 8. Terminal interaction and copy-paste shortcuts
     const terminalBody = document.getElementById('terminal-body');
     if (terminalBody) {
@@ -1121,17 +1131,9 @@ function renderProgressPills() {
             pill.classList.add('completed');
         }
         
-        let isLocked = false;
-        if (index > 0 && !completedLessons[index - 1] && index !== currentLessonIndex) {
-            isLocked = true;
-            pill.classList.add('locked');
-        }
-        
-        if (!isLocked) {
-            pill.addEventListener('click', () => {
-                loadLesson(index);
-            });
-        }
+        pill.addEventListener('click', () => {
+            loadLesson(index);
+        });
         
         container.appendChild(pill);
     });
@@ -1139,7 +1141,7 @@ function renderProgressPills() {
 
 function updateNextButtonState() {
     const nextBtn = document.getElementById('next-btn');
-    if (completedLessons[currentLessonIndex] && currentLessonIndex < lessons.length - 1) {
+    if (currentLessonIndex < lessons.length - 1) {
         nextBtn.removeAttribute('disabled');
     } else {
         nextBtn.setAttribute('disabled', 'true');
@@ -1150,6 +1152,7 @@ function runCurrentCode() {
     const code = codeEditor.getValue();
     const runBtn = document.getElementById('run-btn');
     runBtn.disabled = true;
+    runBtn.innerHTML = '<span class="run-spinner"></span><span>Виконання...</span>';
     
     currentRunTerminalLogs = [];
     accumulatedOutput = "";
@@ -1172,16 +1175,20 @@ function runCurrentCode() {
         __future__: Sk.python3
     });
     
+    const resetRunBtn = () => {
+        runBtn.disabled = false;
+        runBtn.innerHTML = '<svg class="icon-play" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg><span>Запустити код</span>';
+    };
     Sk.misceval.asyncToPromise(() => {
         return Sk.importMainWithBody("<stdin>", false, code, true);
     })
     .then(() => {
         printToTerminal("\n>>> Програма завершилась успішно.\n", "system");
-        runBtn.disabled = false;
-        
+        resetRunBtn();
+
         const lesson = lessons[currentLessonIndex];
         const isValid = lesson.validate(accumulatedOutput, code, currentRunTerminalLogs);
-        
+
         if (isValid) {
             handleLessonSuccess();
         } else {
@@ -1190,7 +1197,7 @@ function runCurrentCode() {
     })
     .catch((err) => {
         printToTerminal("\nПомилка виконання:\n" + err.toString() + "\n", "error");
-        runBtn.disabled = false;
+        resetRunBtn();
     });
 }
 

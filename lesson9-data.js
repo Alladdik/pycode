@@ -145,7 +145,7 @@ attempt_count = 0
       if (!inputs.length) return false;
       const last = parseInt(inputs[inputs.length-1].value);
       if (last !== 7) return false;
-      return output.includes(String(inputs.length)) && output.toLowerCase().includes('вгадав');
+      return output.includes(String(inputs.length));
     }
   },
   {

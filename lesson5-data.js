@@ -39,9 +39,8 @@ b = int(input("b: "))
       if (inputs.length < 2) return false;
       const a = parseInt(inputs[0].value), b = parseInt(inputs[1].value);
       if (isNaN(a) || isNaN(b) || b === 0) return false;
-      const out = output.trim().toLowerCase();
-      if (a % b === 0) return out.includes('ділиться');
-      return out.includes('залишок') && out.includes(String(a % b));
+      if (a % b === 0) return output.trim().length > 0;
+      return output.trim().includes(String(a % b));
     }
   },
   {
@@ -315,7 +314,7 @@ if not found:
       if (isNaN(n) || n <= 0) return false;
       const expected = [];
       for (let i = 1; i <= n; i++) { if (i % 3 === 0) expected.push(i); }
-      if (expected.length === 0) return output.includes('Немає');
+      if (expected.length === 0) return output.trim().length > 0;
       const out = output.trim();
       return expected.every(v => out.includes(String(v)));
     }

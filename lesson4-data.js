@@ -40,14 +40,13 @@ print("Готово!")
       if (!inputs.length) return false;
       const n = parseInt(inputs[0].value);
       if (isNaN(n) || n <= 0) return false;
-      // Sequential search: accumulatedOutput contains input value too, so skip it
       const lines = output.trim().split('\n').map(l => l.trim()).filter(l => /^\d+$/.test(l));
       let expected = 0;
       for (const line of lines) {
         if (parseInt(line) === expected) expected++;
         if (expected === n) break;
       }
-      return expected === n && output.includes('Готово');
+      return expected === n;
     }
   },
   {
@@ -130,7 +129,7 @@ print("Поїхали! 🚀")
       const seq = [10, 9, 8, 7, 6, 5, 4, 3, 2, 1];
       let idx = 0;
       for (const l of lines) { if (idx < seq.length && parseInt(l) === seq[idx]) idx++; }
-      return idx === 10 && (output.includes('Поїхали') || output.includes('🚀'));
+      return idx === 10;
     }
   },
   {
@@ -348,7 +347,7 @@ cars = []
       if (!/\bfor\b/.test(code) || !/\[/.test(code)) return false;
       const lines = output.trim().split('\n').filter(l => l.trim());
       const numbered = lines.filter(l => /^\d+\./.test(l.trim()));
-      return numbered.length >= 5 && output.toLowerCase().includes('всього');
+      return numbered.length >= 5;
     }
   }
 ];
