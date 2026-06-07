@@ -73,7 +73,7 @@ n ** 0.5 → √n   (квадратний корінь!)</code></pre>
       'Повне рішення:<br><code>square = n ** 2</code><br><code>cube = n ** 3</code><br><code>print(f"Квадрат: {square}")</code><br><code>print(f"Куб: {cube}")</code>'
     ],
     validate: (output, code, terminalLogs) => {
-      if (!/ \*\* /.test(code) && !/\*\*2/.test(code)) return false;
+      if (!/\*\*/.test(code)) return false;
       const inputs = terminalLogs.filter(l => l.type === 'input');
       if (!inputs.length) return false;
       const n = parseInt(inputs[0].value);
@@ -188,13 +188,12 @@ print(f"Через while: {count2}")
     theory: `
       <h3>Цифри числа 🔍</h3>
       <div class="theory-card">
-        <pre><code>n = 4567
+        <pre><code>n = 3856
 # Остання цифра:
-last  = n % 10          # → 7
+last  = n % 10          # → 6
 # Перша цифра:
-first = int(str(n)[0])  # → 4
-# Без першої та останньої:
-middle = (n % 1000) // 10  # для 4-значних</code></pre>
+first = int(str(n)[0])  # → 3
+# Загальний принцип працює для будь-якого числа</code></pre>
       </div>
       <div class="instruction-box">
         <h4>📝 Твоє завдання:</h4>
@@ -384,7 +383,7 @@ print(f"{original} → {reversed_n}")
       'Повне рішення:<br><code>first = n // 10</code><br><code>second = n % 10</code><br><code>total = first + second</code><br><code>print(f"Перша: {first}, Друга: {second}")</code><br><code>print(f"Сума цифр: {total}")</code>'
     ],
     validate: (output, code, terminalLogs) => {
-      if (!/ \/\//.test(code) && !/ %/.test(code)) return false;
+      if (!/\/\//.test(code) && !/%/.test(code)) return false;
       const inputs = terminalLogs.filter(l => l.type === 'input');
       if (!inputs.length) return false;
       const n = parseInt(inputs[inputs.length-1].value);

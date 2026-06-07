@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PyCode Hub — Підсумковий тест: Модулі 1–5</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600&family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.12/codemirror.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.12/theme/eclipse.min.css">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        body { overflow-y: auto; }
+        .app-container { height: auto; min-height: 100vh; }
+        .quiz-main { flex: 1; display: flex; align-items: flex-start; justify-content: center; padding: 1.6rem 1rem 3rem; }
+        .quiz-wrap { width: 100%; max-width: 720px; }
+        .quiz-screen { display: none; }
+        .quiz-screen.active { display: block; }
+
+        /* ── START ── */
+        .start-card { background: var(--bg-panel); border: 1px solid var(--border); border-radius: var(--r-lg); box-shadow: var(--s-xl); padding: 3rem 2.5rem; text-align: center; animation: fadeUp 0.4s cubic-bezier(0.16,1,0.3,1); }
+        .start-hero { font-size: 4.5rem; margin-bottom: 0.8rem; display: block; animation: float 3.5s ease-in-out infinite; }
+        @keyframes float { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-9px); } }
+        .start-card h1 { font-family: var(--f-disp); font-size: 2rem; font-weight: 800; color: var(--text-primary); margin-bottom: 0.45rem; }
+        .start-sub { color: var(--text-muted); font-size: 0.92rem; margin-bottom: 1.8rem; }
+        .topic-chips { display: flex; flex-wrap: wrap; gap: 0.5rem; justify-content: center; margin-bottom: 1.8rem; }
+        .topic-chip { padding: 0.3rem 0.85rem; border-radius: 9999px; font-size: 0.76rem; font-weight: 700; border: 1.5px solid; }
+        .chip-m1 { background:rgba(13,148,136,.09); color:#0d9488; border-color:rgba(13,148,136,.28); }
+        .chip-m2 { background:rgba(2,132,199,.09);  color:#0284c7; border-color:rgba(2,132,199,.28); }
+        .chip-m3 { background:rgba(217,119,6,.09);  color:#d97706; border-color:rgba(217,119,6,.28); }
+        .chip-m4 { background:rgba(124,58,237,.09); color:#7c3aed; border-color:rgba(124,58,237,.28); }
+        .chip-m5 { background:rgba(225,29,72,.09);  color:#e11d48; border-color:rgba(225,29,72,.28); }
+        .start-note { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; margin-bottom: 1.8rem; }
+        .note-pill { background: var(--bg-panel-raised); border: 1px solid var(--border); border-radius: var(--r-md); padding: 0.5rem 1rem; font-size: 0.82rem; font-weight: 600; color: var(--text-muted); }
+        .best-row { background: var(--accent-soft); border: 1px solid var(--accent-border); border-radius: var(--r-md); padding: 0.6rem 1.2rem; font-size: 0.83rem; font-weight: 600; color: var(--accent-text); margin-bottom: 1.6rem; display: none; }
+        .btn-lg { padding: 0.85rem 2.8rem; font-size: 1rem; }
+        .kbd-tip { font-size: 0.73rem; color: var(--text-faint); margin-top: 0.9rem; }
+        .kbd { display: inline-block; background: var(--bg-panel-raised); border: 1px solid var(--border); border-radius: 4px; padding: 0.08rem 0.38rem; font-family: var(--f-code); font-size: 0.7rem; color: var(--text-muted); }
+
+        /* ── QUESTION ── */
+        .q-card { background: var(--bg-panel); border: 1px solid var(--border); border-radius: var(--r-lg); box-shadow: var(--s-xl); overflow: hidden; }
+        .q-prog-track { height: 4px; background: var(--bg-panel-raised); }
+        .q-prog-fill { height: 100%; background: linear-gradient(90deg, var(--accent), #818cf8); border-radius: 0 2px 2px 0; transition: width 0.4s cubic-bezier(0.16,1,0.3,1); }
+        .q-header { padding: 0.85rem 1.5rem; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--border); background: var(--bg-panel-raised); }
+        .q-counter { font-size: 0.8rem; font-weight: 700; color: var(--text-muted); }
+        .q-badge { padding: 0.22rem 0.75rem; border-radius: 9999px; font-size: 0.72rem; font-weight: 700; border: 1.5px solid; }
+        .badge-m1 { background:rgba(13,148,136,.09); color:#0d9488; border-color:rgba(13,148,136,.28); }
+        .badge-m2 { background:rgba(2,132,199,.09);  color:#0284c7; border-color:rgba(2,132,199,.28); }
+        .badge-m3 { background:rgba(217,119,6,.09);  color:#d97706; border-color:rgba(217,119,6,.28); }
+        .badge-m4 { background:rgba(124,58,237,.09); color:#7c3aed; border-color:rgba(124,58,237,.28); }
+        .badge-m5 { background:rgba(225,29,72,.09);  color:#e11d48; border-color:rgba(225,29,72,.28); }
+        .q-body { padding: 1.6rem 1.8rem; }
+        .q-text { font-family: var(--f-disp); font-size: 1.13rem; font-weight: 700; color: var(--text-primary); line-height: 1.4; margin-bottom: 1.1rem; }
+        .q-code { background: #1a2236; border: 1px solid rgba(255,255,255,0.07); border-radius: var(--r-md); padding: 0.9rem 1.1rem; margin-bottom: 1.25rem; font-family: var(--f-code); font-size: 0.87rem; color: #c8d8f0; line-height: 1.6; white-space: pre; overflow-x: auto; box-shadow: 0 4px 14px rgba(10,15,30,0.2); }
+        .q-code::-webkit-scrollbar { height: 4px; }
+        .q-code::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 999px; }
+        .opts { display: grid; grid-template-columns: 1fr 1fr; gap: 0.6rem; }
+        @media (max-width: 480px) { .opts { grid-template-columns: 1fr; } }
+        .opt-btn { background: var(--bg-panel-raised); border: 2px solid var(--border); border-radius: var(--r-md); padding: 0.8rem 1rem; text-align: left; font-family: var(--f-code); font-size: 0.87rem; font-weight: 500; color: var(--text-body); cursor: pointer; transition: all 0.15s cubic-bezier(0.4,0,0.2,1); line-height: 1.4; word-break: break-word; }
+        .opt-letter { display: inline-block; background: rgba(0,0,0,0.06); color: var(--text-muted); border-radius: 4px; font-size: 0.68rem; font-weight: 800; padding: 0.05rem 0.32rem; margin-right: 0.45rem; font-family: var(--f-ui); letter-spacing: 0.5px; transition: all 0.15s; }
+        .opt-btn:hover:not(:disabled) { border-color: var(--accent-border); background: var(--accent-soft); color: var(--accent-text); transform: translateY(-1px); box-shadow: var(--s-sm); }
+        .opt-btn:hover:not(:disabled) .opt-letter { background: var(--accent-border); color: var(--accent-text); }
+        .opt-btn.picked { border-color: var(--accent); background: var(--accent-soft); color: var(--accent-text); font-weight: 600; }
+        .opt-btn.picked .opt-letter { background: var(--accent-border); color: var(--accent-text); }
+        .opt-btn:disabled { cursor: default; transform: none !important; box-shadow: none !important; }
+        .q-footer { padding: 0.9rem 1.8rem 1.35rem; display: flex; justify-content: flex-end; }
+
+        /* ── RESULT ── */
+        .result-top { background: var(--bg-panel); border: 1px solid var(--border); border-radius: var(--r-lg); box-shadow: var(--s-xl); padding: 2.2rem 2rem 1.8rem; text-align: center; animation: fadeUp 0.4s cubic-bezier(0.16,1,0.3,1); margin-bottom: 1rem; }
+        .r-emoji { font-size: 3.8rem; margin-bottom: 0.5rem; display: block; }
+        .r-rank { display: inline-block; font-size: 0.78rem; font-weight: 800; letter-spacing: 1.4px; text-transform: uppercase; padding: 0.28rem 1rem; border-radius: 9999px; border: 2px solid; margin-bottom: 0.65rem; }
+        .result-top h1 { font-family: var(--f-disp); font-size: 1.7rem; font-weight: 800; color: var(--text-primary); margin-bottom: 0.35rem; }
+        .r-score { font-family: var(--f-disp); font-size: 3rem; font-weight: 800; margin: 0.3rem 0 0.2rem; }
+        .s-good { color: var(--success); } .s-ok { color: var(--warning); } .s-bad { color: var(--error); }
+        .r-stars { font-size: 1.5rem; letter-spacing: 0.1rem; margin: 0.2rem 0 0.7rem; }
+        .r-msg { color: var(--text-muted); font-size: 0.9rem; line-height: 1.6; max-width: 420px; margin: 0 auto 1rem; }
+        .r-mod-row { display: flex; gap: 0.5rem; justify-content: center; flex-wrap: wrap; margin-bottom: 1.2rem; }
+        .r-mod-pill { padding: 0.32rem 0.9rem; border-radius: 9999px; font-size: 0.76rem; font-weight: 700; border: 1.5px solid; }
+        .r-buttons { display: flex; gap: 0.7rem; justify-content: center; flex-wrap: wrap; }
+
+        /* ── REVIEW ── */
+        .review-section { background: var(--bg-panel); border: 1px solid var(--border); border-radius: var(--r-lg); box-shadow: var(--s-md); overflow: hidden; animation: fadeUp 0.5s 0.1s cubic-bezier(0.16,1,0.3,1) both; margin-bottom: 1rem; }
+        .review-header { padding: 0.9rem 1.4rem; border-bottom: 1px solid var(--border); background: var(--bg-panel-raised); font-family: var(--f-disp); font-size: 0.95rem; font-weight: 700; color: var(--text-primary); display: flex; align-items: center; gap: 0.6rem; }
+        .review-item { padding: 1rem 1.4rem; border-bottom: 1px solid var(--border-lite); display: flex; gap: 1rem; align-items: flex-start; }
+        .review-item:last-child { border-bottom: none; }
+        .review-item.fail { background: rgba(220,38,38,0.025); }
+        .review-num { font-family: var(--f-disp); font-size: 0.82rem; font-weight: 800; min-width: 2.4rem; padding-top: 0.15rem; color: var(--text-muted); flex-shrink: 0; }
+        .review-item.ok .review-num { color: var(--success); }
+        .review-item.fail .review-num { color: var(--error); }
+        .review-body { flex: 1; min-width: 0; }
+        .review-q { font-size: 0.84rem; font-weight: 600; color: var(--text-primary); margin-bottom: 0.35rem; line-height: 1.4; }
+        .review-your { font-family: var(--f-code); font-size: 0.82rem; padding: 0.2rem 0.6rem; border-radius: var(--r-sm); display: inline-block; margin-bottom: 0.2rem; }
+        .review-item.ok .review-your { background: var(--success-bg); color: var(--success); }
+        .review-item.fail .review-your { background: var(--error-bg); color: var(--error); }
+        .review-correct { font-family: var(--f-code); font-size: 0.82rem; color: var(--success); background: var(--success-bg); padding: 0.2rem 0.6rem; border-radius: var(--r-sm); display: inline-block; margin-bottom: 0.25rem; }
+        .review-exp { font-size: 0.8rem; color: var(--text-muted); line-height: 1.55; margin-top: 0.15rem; }
+
+        /* ── RECAP THEORY (after results) ── */
+        .recap-section { background: var(--bg-panel); border: 1px solid var(--border); border-radius: var(--r-lg); box-shadow: var(--s-md); overflow: hidden; margin-bottom: 1rem; animation: fadeUp 0.5s 0.15s cubic-bezier(0.16,1,0.3,1) both; }
+        .recap-header { padding: 0.9rem 1.4rem; border-bottom: 1px solid var(--border); background: var(--bg-panel-raised); font-family: var(--f-disp); font-size: 0.95rem; font-weight: 700; color: var(--text-primary); }
+        .recap-grid { padding: 1.2rem 1.4rem; display: grid; grid-template-columns: 1fr 1fr; gap: 0.8rem; }
+        @media (max-width: 560px) { .recap-grid { grid-template-columns: 1fr; } }
+        .recap-card { border: 1px solid var(--border); border-left: 3px solid var(--accent); border-radius: 0 var(--r-sm) var(--r-sm) 0; padding: 0.8rem 1rem; background: var(--bg-panel-raised); }
+        .recap-card h4 { font-family: var(--f-disp); font-size: 0.85rem; font-weight: 700; color: var(--text-primary); margin-bottom: 0.4rem; }
+        .recap-card pre { margin: 0; background: #1a2236; border-radius: var(--r-sm); padding: 0.55rem 0.75rem; overflow-x: auto; }
+        .recap-card pre code { color: #c8d8f0; font-family: var(--f-code); font-size: 0.76rem; line-height: 1.5; background: none; border: none; padding: 0; display: block; }
+
+        /* CTA bridge to practice */
+        .bridge-cta { background: linear-gradient(135deg, var(--accent-soft), rgba(79,70,229,0.04)); border: 1px solid var(--accent-border); border-radius: var(--r-lg); padding: 1.5rem; text-align: center; margin-bottom: 1rem; }
+        .bridge-cta h3 { font-family: var(--f-disp); font-size: 1.15rem; font-weight: 800; color: var(--text-primary); margin-bottom: 0.4rem; }
+        .bridge-cta p { font-size: 0.86rem; color: var(--text-muted); margin-bottom: 1rem; }
+
+        /* ── PRACTICE (Skulpt IDE) ── */
+        .pr-card { background: #1a2236; color: #c8d8f0; font-family: var(--f-code); font-size: 0.82rem; padding: 0.5rem 0.8rem; border-radius: var(--r-sm); margin-top: 0.5rem; display: inline-block; }
+        .practice-card { background: var(--bg-panel); border: 1px solid var(--border); border-radius: var(--r-lg); box-shadow: var(--s-xl); overflow: hidden; }
+        .practice-header { padding: 0.9rem 1.5rem; border-bottom: 1px solid var(--border); background: var(--bg-panel-raised); display: flex; align-items: center; justify-content: space-between; gap: 0.5rem; }
+        .practice-title { font-family: var(--f-disp); font-size: 1rem; font-weight: 700; color: var(--text-primary); }
+        .practice-steps { display: flex; gap: 5px; }
+        .pstep { width: 26px; height: 26px; border-radius: 50%; background: #f0f3fc; border: 1.5px solid var(--border); display: flex; align-items: center; justify-content: center; font-size: 0.74rem; font-weight: 700; color: var(--text-muted); cursor: pointer; transition: var(--ease); }
+        .pstep.active { background: var(--accent); border-color: var(--accent); color: #fff; }
+        .pstep.done { background: var(--success-bg); border-color: var(--success); color: var(--success); }
+        .pstep.done::after { content: '✓'; } .pstep.done { font-size: 0; } .pstep.done::after { font-size: 0.7rem; }
+        .practice-body { padding: 1.3rem 1.5rem; }
+        .practice-theory { font-size: 0.86rem; color: var(--text-body); line-height: 1.6; margin-bottom: 0.5rem; }
+        .practice-theory p { margin-bottom: 0.3rem; }
+        .practice-task { background: linear-gradient(135deg, var(--info-bg), rgba(2,132,199,0.03)); border: 1px solid rgba(2,132,199,0.22); border-radius: var(--r-md); padding: 0.8rem 1rem; font-size: 0.84rem; color: #0369a1; line-height: 1.55; margin: 0.7rem 0 1rem; }
+        .practice-ide { border: 1px solid var(--border); border-radius: var(--r-md); overflow: hidden; margin-bottom: 0.8rem; }
+        .practice-ide .CodeMirror { height: auto; min-height: 130px; font-family: var(--f-code) !important; font-size: 0.88rem !important; }
+        .practice-controls { display: flex; gap: 0.6rem; align-items: center; margin-bottom: 0.8rem; flex-wrap: wrap; }
+        .practice-term { background: var(--bg-terminal); border-radius: var(--r-md); padding: 0.85rem 1rem; font-family: var(--f-code); font-size: 0.82rem; color: var(--text-terminal); min-height: 60px; max-height: 180px; overflow-y: auto; line-height: 1.55; }
+        .pterm-line { white-space: pre-wrap; word-break: break-word; }
+        .pterm-line.system { color: #7dd3fc; opacity: 0.9; }
+        .pterm-line.error { color: #fca5a5; }
+        .pterm-line.success { color: #4ade80; font-weight: 700; }
+        .pterm-welcome { color: var(--text-on-dark-dim); font-style: italic; }
+        .pterm-input-row { display: flex; align-items: center; }
+        .pterm-prompt { color: #7dd3fc; margin-right: 0.4rem; flex-shrink: 0; }
+        .pterm-input { background: transparent; border: none; outline: none; color: #f0f6ff; font-family: var(--f-code); font-size: 0.82rem; flex: 1; }
+        .practice-footer { padding: 0 1.5rem 1.3rem; display: flex; justify-content: space-between; align-items: center; gap: 0.6rem; flex-wrap: wrap; }
+        .practice-hint-text { font-size: 0.8rem; color: var(--warning); background: var(--warning-bg); border-radius: var(--r-sm); padding: 0.5rem 0.8rem; display: none; margin-bottom: 0.8rem; }
+
+        @keyframes fadeUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes slideIn { from { opacity: 0; transform: translateX(18px); } to { opacity: 1; transform: translateX(0); } }
+        .slide-in { animation: slideIn 0.28s cubic-bezier(0.16,1,0.3,1); }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .run-spinner { display:inline-block; width:14px; height:14px; border:2px solid rgba(255,255,255,0.35); border-top-color:#fff; border-radius:50%; animation:spin 0.7s linear infinite; }
+    </style>
+</head>
+<body>
+    <canvas id="confetti-canvas"></canvas>
+
+    <div class="app-container">
+        <header class="navbar">
+            <div class="logo"><span class="logo-icon">🐍</span><span class="logo-text">PyCode Hub</span></div>
+            <div class="progress-container">
+                <span class="progress-title">Підсумок 1–5</span>
+                <span id="nav-counter" style="font-size:0.82rem;font-weight:700;color:var(--text-muted)">0 / 20</span>
+            </div>
+            <div class="navbar-right">
+                <button class="btn btn-secondary btn-sm" onclick="location.href='lesson5.html'">← Модуль 5</button>
+                <button class="btn btn-primary btn-sm" onclick="location.href='lesson6.html'">Модуль 6 →</button>
+                <div class="theme-switcher"><span class="theme-label">🎨</span>
+                    <div class="accent-colors">
+                        <button class="accent-dot active" data-color="indigo" style="background:#6366f1"></button>
+                        <button class="accent-dot" data-color="emerald" style="background:#10b981"></button>
+                        <button class="accent-dot" data-color="rose" style="background:#f43f5e"></button>
+                        <button class="accent-dot" data-color="amber" style="background:#f59e0b"></button>
+                        <button class="accent-dot" data-color="cyan" style="background:#06b6d4"></button>
+                    </div>
+                </div>
+                <div class="user-stats"><span class="badge badge-indigo">Підсумок 🎓</span></div>
+            </div>
+        </header>
+
+        <main class="quiz-main">
+            <div class="quiz-wrap">
+
+                <!-- ── START ── -->
+                <div id="sc-start" class="quiz-screen active">
+                    <div class="start-card">
+                        <span class="start-hero">🎓</span>
+                        <h1>Підсумковий тест: Модулі 1–5</h1>
+                        <p class="start-sub">20 запитань + практика-розминка перед Модулем 6</p>
+                        <div class="topic-chips">
+                            <span class="topic-chip chip-m1">М1: Змінні</span>
+                            <span class="topic-chip chip-m2">М2: if/elif</span>
+                            <span class="topic-chip chip-m3">М3: while</span>
+                            <span class="topic-chip chip-m4">М4: for+Списки</span>
+                            <span class="topic-chip chip-m5">М5: % та //</span>
+                        </div>
+                        <div class="start-note">
+                            <div class="note-pill">📋 20 питань</div>
+                            <div class="note-pill">🚫 Без таймера</div>
+                            <div class="note-pill">💻 3 практичні задачі</div>
+                        </div>
+                        <div id="best-row" class="best-row"></div>
+                        <button id="btn-start" class="btn btn-primary btn-lg">Почати →</button>
+                        <p class="kbd-tip"><span class="kbd">1</span><span class="kbd">2</span><span class="kbd">3</span><span class="kbd">4</span> — вибір &nbsp;·&nbsp; <span class="kbd">Enter</span> — далі</p>
+                    </div>
+                </div>
+
+                <!-- ── QUESTION ── -->
+                <div id="sc-question" class="quiz-screen">
+                    <div class="q-card">
+                        <div class="q-prog-track"><div id="q-prog" class="q-prog-fill" style="width:0%"></div></div>
+                        <div class="q-header">
+                            <span id="q-counter" class="q-counter">Питання 1 / 20</span>
+                            <span id="q-badge" class="q-badge badge-m1"></span>
+                        </div>
+                        <div class="q-body" id="q-body">
+                            <div id="q-text" class="q-text"></div>
+                            <pre id="q-code" class="q-code" style="display:none"></pre>
+                            <div id="q-opts" class="opts"></div>
+                        </div>
+                        <div class="q-footer" id="q-footer" style="display:none">
+                            <button id="btn-next" class="btn btn-primary">Далі →</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ── RESULT ── -->
+                <div id="sc-result" class="quiz-screen">
+                    <div class="result-top">
+                        <span id="r-emoji" class="r-emoji"></span>
+                        <div id="r-rank" class="r-rank"></div>
+                        <h1 id="r-title"></h1>
+                        <div id="r-score" class="r-score"></div>
+                        <div id="r-stars" class="r-stars"></div>
+                        <p id="r-msg" class="r-msg"></p>
+                        <div id="r-mods" class="r-mod-row"></div>
+                        <div class="r-buttons">
+                            <button id="btn-retry" class="btn btn-secondary">🔄 Пройти тест знову</button>
+                        </div>
+                    </div>
+
+                    <div class="review-section">
+                        <div class="review-header">📋 Розбір відповідей</div>
+                        <div id="review-list"></div>
+                    </div>
+
+                    <div class="recap-section">
+                        <div class="recap-header">📚 Швидке повторення — головне з 5 модулів</div>
+                        <div class="recap-grid">
+                            <div class="recap-card"><h4>М1 · Змінні та типи</h4><pre><code>n = int(input())  # число
+s = input()       # рядок
+len("abc")        # → 3</code></pre></div>
+                            <div class="recap-card"><h4>М2 · Умови</h4><pre><code>if x > 0:
+    print("+")
+elif x == 0:
+    print("0")
+else:
+    print("-")</code></pre></div>
+                            <div class="recap-card"><h4>М3 · while</h4><pre><code>total = 0
+while n > 0:
+    total += n
+    n -= 1</code></pre></div>
+                            <div class="recap-card"><h4>М4 · for + Списки</h4><pre><code>for x in [1, 2, 3]:
+    print(x)
+nums[0]   # перший
+nums[-1]  # останній</code></pre></div>
+                            <div class="recap-card"><h4>М5 · % та //</h4><pre><code>17 % 5   # → 2 (залишок)
+17 // 5  # → 3 (ціле)
+n % 10   # остання цифра</code></pre></div>
+                            <div class="recap-card"><h4>🔜 Далі — М6 · Числа</h4><pre><code>abs(-5)    # → 5
+2 ** 3     # → 8
+str(42)    # → "42"
+int("9")   # → 9</code></pre></div>
+                        </div>
+                    </div>
+
+                    <div class="bridge-cta">
+                        <h3>💻 Практика перед Модулем 6</h3>
+                        <p>3 короткі задачі, які плавно вводять у тему наступного модуля — маніпуляції з числами.</p>
+                        <button id="btn-to-practice" class="btn btn-primary btn-lg">Перейти до практики →</button>
+                    </div>
+                </div>
+
+                <!-- ── PRACTICE ── -->
+                <div id="sc-practice" class="quiz-screen">
+                    <div class="practice-card">
+                        <div class="practice-header">
+                            <span class="practice-title" id="pr-title">Розминка</span>
+                            <div class="practice-steps" id="pr-steps"></div>
+                        </div>
+                        <div class="practice-body">
+                            <div class="practice-theory" id="pr-theory"></div>
+                            <div class="practice-task" id="pr-task"></div>
+                            <div class="practice-hint-text" id="pr-hint"></div>
+                            <div class="practice-ide"><textarea id="pr-code"></textarea></div>
+                            <div class="practice-controls">
+                                <button id="pr-run" class="btn btn-success">▶ Запустити</button>
+                                <button id="pr-hint-btn" class="btn btn-secondary">💡 Підказка</button>
+                                <button id="pr-reset" class="btn btn-secondary btn-sm">↺ Скинути</button>
+                            </div>
+                            <div class="practice-term" id="pr-term"><span class="pterm-welcome">Результат коду з'явиться тут…</span></div>
+                        </div>
+                        <div class="practice-footer">
+                            <button id="pr-prev" class="btn btn-secondary btn-sm">← Попередня</button>
+                            <button id="pr-next" class="btn btn-primary">Наступна →</button>
+                            <button id="pr-to-module6" class="btn btn-success" style="display:none">🚀 Почати Модуль 6 →</button>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </main>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.12/codemirror.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.12/mode/python/python.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/skulpt@1.2.0/dist/skulpt.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/skulpt@1.2.0/dist/skulpt-stdlib.js"></script>
+    <script src="test5-data.js"></script>
+    <script>
+    // ── Theme ──
+    const THEMES = {
+        indigo:  ['#4f46e5','rgba(79,70,229,0.16)','rgba(79,70,229,0.32)','rgba(79,70,229,0.07)','#4338ca'],
+        emerald: ['#059669','rgba(5,150,105,0.18)','rgba(5,150,105,0.32)','rgba(5,150,105,0.07)','#047857'],
+        rose:    ['#e11d48','rgba(225,29,72,0.18)','rgba(225,29,72,0.32)','rgba(225,29,72,0.07)','#be123c'],
+        amber:   ['#d97706','rgba(217,119,6,0.18)','rgba(217,119,6,0.32)','rgba(217,119,6,0.07)','#b45309'],
+        cyan:    ['#0891b2','rgba(8,145,178,0.18)','rgba(8,145,178,0.32)','rgba(8,145,178,0.07)','#0e7490']
+    };
+    function applyTheme(n){ const t=THEMES[n]; if(!t) return; const r=document.documentElement;
+        ['--accent','--accent-glow','--accent-border','--accent-soft','--accent-text'].forEach((p,i)=>r.style.setProperty(p,t[i]));
+        document.querySelectorAll('.accent-dot').forEach(d=>d.classList.toggle('active',d.dataset.color===n));
+        localStorage.setItem('pycode_theme_color',n); }
+    document.querySelectorAll('.accent-dot').forEach(d=>d.addEventListener('click',()=>applyTheme(d.dataset.color)));
+    applyTheme(localStorage.getItem('pycode_theme_color')||'indigo');
+
+    // ── Confetti ──
+    const cvs=document.getElementById('confetti-canvas'), cx=cvs.getContext('2d');
+    let cPts=[], cId=null;
+    function sizeCvs(){ cvs.width=innerWidth; cvs.height=innerHeight; } addEventListener('resize',sizeCvs); sizeCvs();
+    class CP{ constructor(){ this.x=Math.random()*cvs.width; this.y=Math.random()*-cvs.height-20; this.w=Math.random()*9+4; this.h=Math.random()*5+3; this.c=`hsl(${Math.random()*360},78%,62%)`; this.vx=Math.random()*4-2; this.vy=Math.random()*5+3; this.r=Math.random()*360; this.rv=Math.random()*8-4; }
+        step(){ this.x+=this.vx;this.y+=this.vy;this.r+=this.rv; }
+        draw(){ cx.save();cx.translate(this.x,this.y);cx.rotate(this.r*Math.PI/180);cx.fillStyle=this.c;cx.fillRect(-this.w/2,-this.h/2,this.w,this.h);cx.restore(); } }
+    function boom(n=200){ if(cId)cancelAnimationFrame(cId); cPts=Array.from({length:n},()=>new CP());
+        (function loop(){ cx.clearRect(0,0,cvs.width,cvs.height); cPts.forEach(p=>{p.step();p.draw();}); cPts=cPts.filter(p=>p.y<cvs.height+20);
+            if(cPts.length)cId=requestAnimationFrame(loop); else cx.clearRect(0,0,cvs.width,cvs.height); })(); }
+
+    // ── State ──
+    const Q=quizData.questions, N=Q.length;
+    let idx=0, userAnswers=[];
+
+    function rank(s){
+        if(s===20) return {t:'Python Master',e:'👑',bg:'rgba(124,58,237,.1)',c:'#7c3aed',b:'rgba(124,58,237,.35)'};
+        if(s>=18)  return {t:'Python Expert', e:'🌟',bg:'rgba(2,132,199,.1)', c:'#0284c7',b:'rgba(2,132,199,.35)'};
+        if(s>=15)  return {t:'Python Pro',    e:'⚡',bg:'rgba(5,150,105,.1)', c:'#059669',b:'rgba(5,150,105,.35)'};
+        if(s>=11)  return {t:'Junior Python', e:'🐍',bg:'rgba(217,119,6,.1)', c:'#d97706',b:'rgba(217,119,6,.35)'};
+        if(s>=7)   return {t:'Python Учень',  e:'📚',bg:'rgba(79,70,229,.08)',c:'#4f46e5',b:'rgba(79,70,229,.3)'};
+        return         {t:'Python Новачок',   e:'🐣',bg:'rgba(100,116,139,.1)',c:'#64748b',b:'rgba(100,116,139,.3)'};
+    }
+    function loadBest(){ try{ const b=JSON.parse(localStorage.getItem(quizData.storageKey)); if(!b)return;
+        const rk=rank(b.score); const el=document.getElementById('best-row');
+        el.innerHTML=`🏅 Твій рекорд: <strong>${b.score}/${b.total}</strong> — ${rk.e} ${rk.t} &nbsp;·&nbsp; <span style="opacity:.65">${b.date}</span>`;
+        el.style.display='block'; }catch(e){} }
+    loadBest();
+
+    function show(id){ document.querySelectorAll('.quiz-screen').forEach(s=>s.classList.remove('active')); document.getElementById(id).classList.add('active'); }
+
+    // ── Quiz render ──
+    function render(){
+        const d=Q[idx];
+        document.getElementById('q-prog').style.width=(idx/N*100)+'%';
+        document.getElementById('q-counter').textContent=`Питання ${idx+1} / ${N}`;
+        document.getElementById('nav-counter').textContent=`${idx+1} / ${N}`;
+        const badge=document.getElementById('q-badge'); badge.textContent=d.moduleLabel; badge.className='q-badge badge-m'+d.module;
+        document.getElementById('q-text').textContent=d.question;
+        const codeEl=document.getElementById('q-code');
+        if(d.code){ codeEl.textContent=d.code; codeEl.style.display='block'; } else codeEl.style.display='none';
+        const L=['A','B','C','D'], optsEl=document.getElementById('q-opts'); optsEl.innerHTML='';
+        d.options.forEach((opt,i)=>{ const b=document.createElement('button'); b.className='opt-btn';
+            b.innerHTML=`<span class="opt-letter">${L[i]}</span>${opt}`;
+            if(userAnswers[idx]===i) b.classList.add('picked');
+            b.addEventListener('click',()=>pick(i)); optsEl.appendChild(b); });
+        document.getElementById('q-footer').style.display = userAnswers[idx]!==undefined ? 'flex' : 'none';
+        document.getElementById('btn-next').textContent = idx===N-1 ? 'Завершити →' : 'Далі →';
+        const body=document.getElementById('q-body'); body.classList.remove('slide-in'); void body.offsetWidth; body.classList.add('slide-in');
+    }
+    function pick(sel){ userAnswers[idx]=sel;
+        document.querySelectorAll('.opt-btn').forEach((b,i)=>b.classList.toggle('picked',i===sel));
+        document.getElementById('q-footer').style.display='flex'; }
+    function next(){ if(userAnswers[idx]===undefined) return; idx++; if(idx>=N) showResults(); else render(); }
+    document.getElementById('btn-next').addEventListener('click', next);
+
+    // ── Results ──
+    function showResults(){
+        document.getElementById('q-prog').style.width='100%';
+        document.getElementById('nav-counter').textContent=`${N} / ${N}`;
+        let score=0; const ms={1:{c:0,t:0},2:{c:0,t:0},3:{c:0,t:0},4:{c:0,t:0},5:{c:0,t:0}};
+        Q.forEach((q,i)=>{ ms[q.module].t++; if(userAnswers[i]===q.correct){ score++; ms[q.module].c++; } });
+        const pct=score/N, rk=rank(score), stars=Math.round(pct*5);
+        let title,msg;
+        if(score===20){ title='Бездоганно!'; msg='Усі 20 правильно — ти повністю володієш основами Python. Час для практики й Модуля 6! 🚀'; }
+        else if(score>=18){ title='Чудово!'; msg='Майже ідеально. Глянь на розбір, зроби практику — і вперед.'; }
+        else if(score>=15){ title='Дуже добре!'; msg='Сильний результат по всіх модулях. Практика закріпить — і можна далі.'; }
+        else if(score>=11){ title='Добре!'; msg='Основи є. Повтори теми де були помилки за карткою нижче.'; }
+        else if(score>=7){ title='Непогано'; msg='Є над чим попрацювати. Перечитай розбір і повторення — і спробуй ще.'; }
+        else { title='Варто повторити'; msg='Не здавайся! Повернись до модулів 1–5 — все вийде з практикою 💪'; }
+        const sCls=score>=15?'s-good':score>=8?'s-ok':'s-bad';
+        document.getElementById('r-emoji').textContent=rk.e;
+        const rankEl=document.getElementById('r-rank'); rankEl.textContent=rk.t; rankEl.style.cssText=`background:${rk.bg};color:${rk.c};border-color:${rk.b}`;
+        document.getElementById('r-title').textContent=title;
+        document.getElementById('r-score').innerHTML=`<span class="${sCls}">${score}</span><span style="font-size:1.55rem;color:var(--text-muted);font-weight:400"> / ${N}</span>`;
+        document.getElementById('r-stars').textContent='⭐'.repeat(stars)+'☆'.repeat(5-stars);
+        document.getElementById('r-msg').textContent=msg;
+        const mCol={1:'#0d9488',2:'#0284c7',3:'#d97706',4:'#7c3aed',5:'#e11d48'}, mN={1:'М1',2:'М2',3:'М3',4:'М4',5:'М5'};
+        const mods=document.getElementById('r-mods'); mods.innerHTML='';
+        [1,2,3,4,5].forEach(m=>{ const d=ms[m]; const pill=document.createElement('span'); pill.className='r-mod-pill';
+            const ok=d.c===d.t, half=d.c>=d.t/2;
+            const bg=ok?'rgba(22,163,74,.1)':half?'rgba(217,119,6,.1)':'rgba(220,38,38,.09)';
+            const col=ok?'#16a34a':half?'#d97706':'#dc2626';
+            const brd=ok?'rgba(22,163,74,.3)':half?'rgba(217,119,6,.3)':'rgba(220,38,38,.3)';
+            pill.style.cssText=`background:${bg};color:${col};border-color:${brd}`; pill.textContent=`${mN[m]}: ${d.c}/${d.t}`; mods.appendChild(pill); });
+        const list=document.getElementById('review-list'); list.innerHTML='';
+        Q.forEach((q,i)=>{ const sel=userAnswers[i], ok=sel===q.correct;
+            const item=document.createElement('div'); item.className='review-item '+(ok?'ok':'fail');
+            const yourText=sel!==undefined?q.options[sel]:'—', corrText=q.options[q.correct];
+            item.innerHTML=`<div class="review-num">${i+1}${ok?' ✅':' ❌'}</div>
+                <div class="review-body">
+                    <div class="review-q">${q.question}</div>
+                    <span class="review-your">${ok?'✅':'❌'} ${yourText}</span>
+                    ${!ok?`<br><span class="review-correct">✅ ${corrText}</span>`:''}
+                    ${!ok?`<div class="review-exp">${q.explanation}</div>`:''}
+                </div>`;
+            list.appendChild(item); });
+        show('sc-result'); window.scrollTo({top:0,behavior:'smooth'});
+        if(score>=14) boom(200);
+        try{ const prev=JSON.parse(localStorage.getItem(quizData.storageKey)||'null');
+            if(!prev||score>prev.score) localStorage.setItem(quizData.storageKey,JSON.stringify({score,total:N,date:new Date().toLocaleDateString('uk-UA')})); }catch(e){}
+    }
+
+    function startQuiz(){ idx=0; userAnswers=[]; show('sc-question'); render(); window.scrollTo({top:0}); }
+    document.getElementById('btn-start').addEventListener('click', startQuiz);
+    document.getElementById('btn-retry').addEventListener('click', ()=>{ document.getElementById('nav-counter').textContent='0 / 20'; show('sc-start'); loadBest(); window.scrollTo({top:0}); });
+
+    // ════════════════════════════════════════════════════
+    //  PRACTICE — Skulpt mini-IDE
+    // ════════════════════════════════════════════════════
+    const PR = quizData.practice;
+    let prIdx = 0, prEditor = null, prDone = [], prCurrentInputs = [], prAccOut = '', prCurLine = null;
+    PR.forEach(()=>prDone.push(false));
+
+    function builtinRead(x){ if(Sk.builtinFiles===undefined||Sk.builtinFiles["files"][x]===undefined) throw "File not found: '"+x+"'"; return Sk.builtinFiles["files"][x]; }
+
+    function prTermPrint(text, type='output'){
+        const body=document.getElementById('pr-term');
+        const parts=text.split('\n');
+        for(let i=0;i<parts.length;i++){
+            const part=parts[i];
+            if(part===''&&i===parts.length-1){ prCurLine=null; break; }
+            if(!prCurLine){ prCurLine=document.createElement('div'); prCurLine.className=`pterm-line ${type}`; body.appendChild(prCurLine); }
+            prCurLine.textContent+=part;
+            if(i<parts.length-1) prCurLine=null;
+        }
+        body.scrollTop=body.scrollHeight;
+    }
+    function prPrompt(promptText){
+        const body=document.getElementById('pr-term');
+        return new Promise(resolve=>{
+            const row=document.createElement('div'); row.className='pterm-input-row';
+            if(promptText){ const ps=document.createElement('span'); ps.className='pterm-prompt'; ps.textContent=promptText; row.appendChild(ps); }
+            const inp=document.createElement('input'); inp.type='text'; inp.className='pterm-input'; inp.setAttribute('autocomplete','off'); inp.spellcheck=false;
+            row.appendChild(inp); body.appendChild(row); body.scrollTop=body.scrollHeight;
+            setTimeout(()=>inp.focus(),10);
+            inp.addEventListener('keydown',e=>{ if(e.key==='Enter'){ e.preventDefault(); const v=inp.value;
+                inp.disabled=true; inp.style.color='#94a3b8'; prCurrentInputs.push(v); prCurLine=null; resolve(v); } });
+        });
+    }
+
+    function loadPractice(){
+        const p=PR[prIdx];
+        document.getElementById('pr-title').textContent=`Практика ${prIdx+1}/${PR.length}: ${p.title.replace(/^Розминка \d+: /,'')}`;
+        document.getElementById('pr-theory').innerHTML=p.theory;
+        document.getElementById('pr-task').innerHTML='📝 '+p.task;
+        const hintEl=document.getElementById('pr-hint'); hintEl.style.display='none'; hintEl.innerHTML='💡 '+p.hint;
+        const term=document.getElementById('pr-term'); term.innerHTML='<span class="pterm-welcome">Результат коду з\'явиться тут…</span>'; prCurLine=null;
+        const draft=localStorage.getItem(`pycode_t5pr_${prIdx}`);
+        if(prEditor){ prEditor.setValue(draft!==null?draft:p.initialCode); prEditor.refresh(); }
+        renderPSteps();
+        document.getElementById('pr-prev').style.visibility = prIdx===0 ? 'hidden' : 'visible';
+        const isLast = prIdx===PR.length-1;
+        document.getElementById('pr-next').style.display = isLast ? 'none' : 'inline-flex';
+        updateModule6Btn();
+    }
+    function renderPSteps(){
+        const c=document.getElementById('pr-steps'); c.innerHTML='';
+        PR.forEach((p,i)=>{ const s=document.createElement('div'); s.className='pstep'; s.textContent=i+1;
+            if(i===prIdx) s.classList.add('active'); if(prDone[i]) s.classList.add('done');
+            s.addEventListener('click',()=>{ prIdx=i; loadPractice(); }); c.appendChild(s); });
+    }
+    function updateModule6Btn(){
+        // Always give a forward path: show on last step, or once all practice done.
+        const isLast = prIdx===PR.length-1;
+        const allDone = prDone.every(Boolean);
+        document.getElementById('pr-to-module6').style.display = (isLast || allDone) ? 'inline-flex' : 'none';
+    }
+
+    function runPractice(){
+        const code=prEditor.getValue();
+        const btn=document.getElementById('pr-run'); btn.disabled=true; btn.innerHTML='<span class="run-spinner"></span> Виконання…';
+        prCurrentInputs=[]; prAccOut=''; prCurLine=null;
+        const term=document.getElementById('pr-term'); term.innerHTML='';
+        prTermPrint('>>> Запуск…\n','system');
+        Sk.configure({ output:t=>{ prAccOut+=t; prTermPrint(t,'output'); }, read:builtinRead, inputfun:prPrompt, inputfunTakesPrompt:true, __future__:Sk.python3 });
+        const reset=()=>{ btn.disabled=false; btn.innerHTML='▶ Запустити'; };
+        Sk.misceval.asyncToPromise(()=>Sk.importMainWithBody("<stdin>",false,code,true))
+            .then(()=>{ prTermPrint('\n>>> Завершено.\n','system'); reset();
+                const ok=PR[prIdx].validate(prAccOut, code, prCurrentInputs);
+                if(ok){ prTermPrint('✅ Правильно! Задачу виконано 🎉\n','success'); if(!prDone[prIdx]){ prDone[prIdx]=true; renderPSteps(); } updateModule6Btn(); boom(120); }
+                else prTermPrint('❌ Поки не те — перевір завдання і спробуй ще раз.\n','error');
+            })
+            .catch(err=>{ prTermPrint('\nПомилка:\n'+err.toString()+'\n','error'); reset(); });
+    }
+
+    document.getElementById('btn-to-practice').addEventListener('click', ()=>{
+        show('sc-practice'); window.scrollTo({top:0,behavior:'smooth'});
+        if(!prEditor){
+            prEditor=CodeMirror.fromTextArea(document.getElementById('pr-code'), { mode:{name:'python',version:3}, theme:'eclipse', lineNumbers:true, indentUnit:4, tabSize:4, lineWrapping:true,
+                extraKeys:{ "Tab":cm=>cm.replaceSelection("    ") } });
+            prEditor.on('change',()=>localStorage.setItem(`pycode_t5pr_${prIdx}`, prEditor.getValue()));
+        }
+        loadPractice();
+    });
+    document.getElementById('pr-run').addEventListener('click', runPractice);
+    document.getElementById('pr-reset').addEventListener('click', ()=>{ localStorage.removeItem(`pycode_t5pr_${prIdx}`); prEditor.setValue(PR[prIdx].initialCode);
+        const term=document.getElementById('pr-term'); term.innerHTML='<span class="pterm-welcome">Результат коду з\'явиться тут…</span>'; prCurLine=null; });
+    document.getElementById('pr-hint-btn').addEventListener('click', ()=>{ const h=document.getElementById('pr-hint'); h.style.display = h.style.display==='block'?'none':'block'; });
+    document.getElementById('pr-prev').addEventListener('click', ()=>{ if(prIdx>0){ prIdx--; loadPractice(); } });
+    document.getElementById('pr-next').addEventListener('click', ()=>{ if(prIdx<PR.length-1){ prIdx++; loadPractice(); } });
+    document.getElementById('pr-to-module6').addEventListener('click', ()=>location.href='lesson6.html');
+
+    // ── Keyboard (quiz only) ──
+    document.addEventListener('keydown', e=>{
+        const active=document.querySelector('.quiz-screen.active'); if(!active) return;
+        if(active.id==='sc-start' && (e.key==='Enter'||e.key===' ')){ e.preventDefault(); startQuiz(); return; }
+        if(active.id!=='sc-question') return;
+        if('1234'.includes(e.key)){ const i=parseInt(e.key)-1; const btns=document.querySelectorAll('.opt-btn'); if(btns[i]) btns[i].click(); }
+        if((e.key==='Enter'||e.key===' ') && userAnswers[idx]!==undefined){ e.preventDefault(); next(); }
+    });
+    </script>
+</body>
+</html>
