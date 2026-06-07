@@ -59,7 +59,8 @@ print("Готово!")
       <div class="theory-card">
         <h4>Порівняння:</h4>
         <pre><code>range(5)     # 0,1,2,3,4  (від 0)
-range(1, 6)  # 1,2,3,4,5  (від 1 до 5)</code></pre>
+range(1, 4)  # 1,2,3      (від 1 до 3)
+# Загальний принцип: range(1, N+1) → числа від 1 до N</code></pre>
       </div>
       <div class="instruction-box">
         <h4>📝 Твоє завдання:</h4>
@@ -101,9 +102,9 @@ range(1, 6)  # 1,2,3,4,5  (від 1 до 5)</code></pre>
       <p>Третій аргумент — крок. Від'ємний крок → рухаємось назад. При цьому: start > stop!</p>
       <div class="theory-card">
         <h4>Приклади:</h4>
-        <pre><code>range(10, 0, -1) # 10,9,8,7,6,5,4,3,2,1
-range(0, 10, 2)  # 0,2,4,6,8
-range(1, 10, 3)  # 1,4,7</code></pre>
+        <pre><code>range(5, 0, -1)  # 5,4,3,2,1  (від 5 до 1)
+range(0, 10, 2)  # 0,2,4,6,8  (крок +2)
+range(1, 10, 3)  # 1,4,7      (крок +3)</code></pre>
       </div>
       <div class="instruction-box">
         <h4>📝 Твоє завдання:</h4>
@@ -141,12 +142,13 @@ print("Поїхали! 🚀")
       <p>Список — впорядкована колекція у квадратних дужках <code>[]</code>. Кожен елемент має індекс починаючи з <strong>0</strong>.</p>
       <div class="theory-card">
         <h4>Звернення до елементів:</h4>
-        <pre><code>games = ["Minecraft", "Roblox", "GTA"]
-games[0]   # → "Minecraft"  (перший)
-games[1]   # → "Roblox"     (другий)
-games[-1]  # → "GTA"        (останній)
-len(games) # → 3            (кількість)</code></pre>
+        <pre><code>colors = ["червоний", "синій", "зелений", "жовтий"]
+colors[0]   # → "червоний"  (перший, індекс 0)
+colors[1]   # → "синій"     (другий, індекс 1)
+colors[2]   # → "зелений"   (третій, індекс 2)
+len(colors) # → 4           (кількість)</code></pre>
       </div>
+      <p>💡 Щоб отримати <strong>останній</strong> елемент будь-якого списку — використай індекс <code>-1</code>.</p>
       <div class="instruction-box">
         <h4>📝 Твоє завдання:</h4>
         <p>Список <code>fruits</code> вже є. Напиши три рядки:</p>
@@ -219,12 +221,15 @@ for game in games:
       <p><code>enumerate(list, start)</code> повертає пари (номер, елемент). Другий аргумент — з якого числа починати нумерацію.</p>
       <div class="theory-card">
         <h4>Приклад:</h4>
-        <pre><code>games = ["Minecraft", "Roblox", "GTA"]
-for i, game in enumerate(games, 1):
-    print(f"{i}. {game}")
-# → 1. Minecraft
-# → 2. Roblox
-# → 3. GTA</code></pre>
+        <pre><code>movies = ["Аватар", "Дюна", "Матриця"]
+for idx, movie in enumerate(movies):
+    print(f"[{idx}] {movie}")
+# → [0] Аватар
+# → [1] Дюна
+# → [2] Матриця
+
+# Щоб нумерація йшла з 1 — передай другий аргумент:
+# enumerate(movies, 1)  → idx почнеться з 1</code></pre>
       </div>
       <div class="instruction-box">
         <h4>📝 Твоє завдання:</h4>
@@ -233,8 +238,8 @@ for i, game in enumerate(games, 1):
     `,
     initialCode: `cities = ["Київ", "Харків", "Одеса", "Дніпро"]
 
-# Напиши: for i, city in enumerate(cities, 1):
-# Виведи: f"{i}. {city}"
+# Напиши for цикл з enumerate, нумерація починається з 1
+# Формат виводу: "1. Київ", "2. Харків" і т.д.
 `,
     hints: [
       '<code>for i, city in enumerate(cities, 1):</code> дає пари (1,"Київ"), (2,"Харків")...',
@@ -242,7 +247,7 @@ for i, game in enumerate(games, 1):
       'Два рядки:<br><code>for i, city in enumerate(cities, 1):</code><br><code>&nbsp;&nbsp;&nbsp;&nbsp;print(f"{i}. {city}")</code>'
     ],
     validate: (output, code, terminalLogs) => {
-      if (!/\bfor\b/.test(code)) return false;
+      if (!/\bfor\b/.test(code) || !/enumerate/.test(code)) return false;
       const out = output.trim();
       return out.includes('1.') && out.includes('Київ') && out.includes('4.') && out.includes('Дніпро');
     }
@@ -284,13 +289,15 @@ print("Сума:", total)
       <h3>Алгоритм пошуку максимуму 🌟</h3>
       <p>Беремо перший елемент як «поточний найбільший». Перебираємо решту: якщо знайдений більший — оновлюємо.</p>
       <div class="theory-card">
-        <h4>Схема:</h4>
-        <pre><code>best = nums[0]    # припускаємо перший найбільший
-for n in nums:
-    if n > best:
-        best = n  # знайшли більший — оновити
-print(best)</code></pre>
+        <h4>Схема (пошук мінімуму):</h4>
+        <pre><code>temps = [22, 18, 25, 15, 30]
+coldest = temps[0]   # припускаємо перший найхолодніший
+for t in temps:
+    if t < coldest:  # знайшли холодніший — оновити
+        coldest = t
+print(coldest)  # → 15</code></pre>
       </div>
+      <p>💡 Такий самий патерн працює і для <strong>максимуму</strong> — просто зміни умову та назву змінної.</p>
       <div class="instruction-box">
         <h4>📝 Твоє завдання:</h4>
         <p>Змінна <code>best = nums[0]</code> вже є. Напиши <code>for</code> цикл із перевіркою: якщо елемент більший за <code>best</code> — оновити <code>best</code>.</p>
@@ -300,9 +307,8 @@ print(best)</code></pre>
     initialCode: `nums = [4, 17, 2, 9, 31, 6, 12]
 best = nums[0]
 
-# Напиши for цикл:
-# for n in nums:
-#     if n > best: ...
+# Напиши for цикл: перебери nums
+# Якщо елемент більший за best — оновити best
 
 print("Максимум:", best)
 `,

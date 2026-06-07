@@ -39,8 +39,9 @@ b = int(input("b: "))
       if (inputs.length < 2) return false;
       const a = parseInt(inputs[0].value), b = parseInt(inputs[1].value);
       if (isNaN(a) || isNaN(b) || b === 0) return false;
-      if (a % b === 0) return output.trim().length > 0;
-      return output.trim().includes(String(a % b));
+      const out = output.trim().toLowerCase();
+      if (a % b === 0) return out.includes('ділиться') || out.includes('рівно');
+      return out.includes(String(a % b)) && (out.includes('залишок') || out.includes(':'));
     }
   },
   {
@@ -152,7 +153,7 @@ b = int(input("b: "))
       'Повне рішення:<br><code>minutes = seconds // 60</code><br><code>remaining = seconds % 60</code><br><code>print(f"{minutes} хв {remaining} сек")</code>'
     ],
     validate: (output, code, terminalLogs) => {
-      if (!/ \/\//.test(code) && !/ %/.test(code)) return false;
+      if (!/\/\//.test(code) && !/%/.test(code)) return false;
       const inputs = terminalLogs.filter(l => l.type === 'input');
       if (!inputs.length) return false;
       const sec = parseInt(inputs[0].value);
@@ -226,8 +227,8 @@ for i in range(N):
     `,
     initialCode: `n = int(input("N: "))
 
-# Напиши for цикл: for i in range(n):
-#     print((i % 3) + 1)
+# Напиши for цикл, який N разів виводить послідовність 1, 2, 3, 1, 2, 3...
+# Підказка: використай залишок від ділення i на 3
 `,
     hints: [
       '<code>for i in range(n):</code> — цикл N разів',
