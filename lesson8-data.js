@@ -29,7 +29,7 @@ const lessons = [
 # Середнє число x = s // 3
 # Виведи: x-1, x, x+1
 `,
-    hints: ['Середнє: <code>x = s // 3</code>', 'Виведи: <code>print(x - 1, x, x + 1)</code>', 'Повне рішення:<br><code>x = s // 3</code><br><code>print(x - 1, x, x + 1)</code>'],
+    hints: ['Три послідовні числа — це (x-1), x, (x+1). Їх сума = 3x, тож середнє знаходимо цілим діленням суми на 3.'],
     validate: (output, code, terminalLogs) => {
       const inputs = terminalLogs.filter(l => l.type === 'input');
       if (!inputs.length) return false;
@@ -63,7 +63,7 @@ S=-3 → -2 -1 0</code></pre>
 
 # Напиши рішення Задачі #5
 `,
-    hints: ['Введи 12 → має вивести 3 4 5. Потім 0 → -1 0 1.', 'Повне рішення:<br><code>x = s // 3</code><br><code>print(x - 1, x, x + 1)</code>'],
+    hints: ['Та сама ідея, що в Уроці 1. Перевір: S=12→3 4 5, S=0→-1 0 1.'],
     validate: (output, code, terminalLogs) => {
       const inputs = terminalLogs.filter(l => l.type === 'input');
       if (!inputs.length) return false;
@@ -104,7 +104,7 @@ S=-3 → -2 -1 0</code></pre>
 
 # Напиши for цикл з формулою (i % 3) + 1
 `,
-    hints: ['<code>for i in range(n):</code>', 'Всередині: <code>print((i % 3) + 1)</code>', 'Повне рішення:<br><code>for i in range(n):</code><br><code>&nbsp;&nbsp;&nbsp;&nbsp;print((i % 3) + 1)</code>'],
+    hints: ['Залишок i % 3 дає 0,1,2,0,1,2... Додай до нього 1, щоб отримати 1,2,3,1,2,3...'],
     validate: (output, code, terminalLogs) => {
       if (!/\bfor\b/.test(code) || !/%/.test(code)) return false;
       const inputs = terminalLogs.filter(l => l.type === 'input');
@@ -142,7 +142,7 @@ S=-3 → -2 -1 0</code></pre>
 
 # Напиши for цикл з формулою (i % 4) + 1
 `,
-    hints: ['Змінити 3 на 4 в формулі!', 'Повне рішення:<br><code>for i in range(n):</code><br><code>&nbsp;&nbsp;&nbsp;&nbsp;print((i % 4) + 1)</code>'],
+    hints: ['Та сама формула, що в Уроці 3, але період повторення тепер 4 замість 3.'],
     validate: (output, code, terminalLogs) => {
       if (!/\bfor\b/.test(code) || !/%/.test(code)) return false;
       const inputs = terminalLogs.filter(l => l.type === 'input');
@@ -190,7 +190,7 @@ S=-3 → -2 -1 0</code></pre>
 #     if new_num % 3 == 0:
 #         print(new_num)
 `,
-    hints: ['<code>for d in range(10):</code> — перебір цифр 0..9', '<code>new_num = n * 10 + d</code> — дописати цифру', 'Повне рішення:<br><code>for d in range(10):</code><br><code>&nbsp;&nbsp;&nbsp;&nbsp;new_num = n * 10 + d</code><br><code>&nbsp;&nbsp;&nbsp;&nbsp;if new_num % 3 == 0:</code><br><code>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;print(new_num)</code>'],
+    hints: ['Перебери всі цифри 0–9 у циклі. Для кожної сформуй нове число (старе * 10 + цифра) і перевір його ділення на 3.'],
     validate: (output, code, terminalLogs) => {
       if (!/\bfor\b/.test(code) || !/%/.test(code)) return false;
       const inputs = terminalLogs.filter(l => l.type === 'input');
@@ -228,7 +228,7 @@ S=-3 → -2 -1 0</code></pre>
 
 # Напиши рішення Задачі #3
 `,
-    hints: ['Введи 123. Правильна відповідь: 1230, 1233, 1236, 1239.', 'Повне рішення:<br><code>for d in range(10):</code><br><code>&nbsp;&nbsp;&nbsp;&nbsp;new_num = n * 10 + d</code><br><code>&nbsp;&nbsp;&nbsp;&nbsp;if new_num % 3 == 0: print(new_num)</code>'],
+    hints: ['Та сама логіка, що в Уроці 5. Для N=123 правильна відповідь: 1230, 1233, 1236, 1239.'],
     validate: (output, code, terminalLogs) => {
       if (!/\bfor\b/.test(code) || !/%/.test(code)) return false;
       const inputs = terminalLogs.filter(l => l.type === 'input');
@@ -256,7 +256,7 @@ S=-3 → -2 -1 0</code></pre>
     `,
     initialCode: `# Розв'яжи Задачу #5
 `,
-    hints: ['<code>x = s // 3</code>', '<code>print(x-1, x, x+1)</code>'],
+    hints: ['Згадай задачу #5: середнє з трьох послідовних — це ціле ділення суми на 3.'],
     validate: (output, code, terminalLogs) => {
       const inputs = terminalLogs.filter(l => l.type === 'input');
       if (!inputs.length) return false;
@@ -280,11 +280,7 @@ S=-3 → -2 -1 0</code></pre>
     `,
     initialCode: `# Розв'яжи Задачу #3
 `,
-    hints: [
-      '<code>for d in range(10):</code>',
-      '<code>new_num = n * 10 + d</code>',
-      '<code>if new_num % 3 == 0: print(new_num)</code>'
-    ],
+    hints: ['Згадай задачу #3: цикл по цифрах 0–9, нове число = N*10+цифра, і перевірка кратності 3.'],
     validate: (output, code, terminalLogs) => {
       if (!/\bfor\b/.test(code) || !/%/.test(code)) return false;
       const inputs = terminalLogs.filter(l => l.type === 'input');
@@ -329,7 +325,7 @@ num = int(input())
 #     candidate = num * 10 + d
 #     if candidate % 3 == 0: print(candidate)
 `,
-    hints: ['Задача 5: <code>x = s // 3; print(x-1, x, x+1)</code>', 'Задача 2: <code>for i in range(n): print((i%3)+1)</code>', 'Задача 3: <code>for d in range(10):</code><br><code>&nbsp;&nbsp;&nbsp;&nbsp;candidate = num * 10 + d</code><br><code>&nbsp;&nbsp;&nbsp;&nbsp;if candidate % 3 == 0: print(candidate)</code>'],
+    hints: ['Три незалежні задачі, кожна читає своє число: #5 (сума→три числа), #2 (послідовність 1,2,3), #3 (дописати цифру для кратності 3).'],
     validate: (output, code, terminalLogs) => {
       if (!/\bfor\b/.test(code) || !/%/.test(code) || !/\*\s*10/.test(code)) return false;
       const inputs = terminalLogs.filter(l => l.type === 'input');

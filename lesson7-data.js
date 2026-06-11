@@ -27,7 +27,7 @@ abs(a-b)  # відстань між a і b</code></pre>
 # Виведи куб: n ** 3
 # Виведи abs(n**3 - n**2)
 `,
-    hints: ['Спробуй N=5 → квадрат 25, куб 125, abs = 100.', 'Повне рішення:<br><code>print("Квадрат:", n ** 2)</code><br><code>print("Куб:", n ** 3)</code><br><code>print("abs(N^3 - N^2):", abs(n**3 - n**2))</code>'],
+    hints: ['Потрібні три окремі дії: піднесення до квадрата (** 2), до куба (** 3) і модуль різниці abs(...). Перевір на N=5 → 25, 125, 100.'],
     validate: (output, code, terminalLogs) => {
       if (!/\*\*/.test(code) || !/\babs\b/.test(code)) return false;
       const inputs = terminalLogs.filter(l => l.type === 'input');
@@ -65,10 +65,7 @@ answer = abs(cube - square)
 
 # Обчисли abs(n**3 - n**2)
 `,
-    hints: [
-      '<code>result = abs(n**3 - n**2)</code> → <code>print(result)</code>',
-      'Повне рішення: <code>n = int(input())</code><br><code>print(abs(n**3 - n**2))</code>'
-    ],
+    hints: ['Згадай: оператор ** для степеня і функція abs() для модуля. Спочатку обчисли куб і квадрат, потім модуль їх різниці.'],
     validate: (output, code, terminalLogs) => {
       if (!/\babs\b/.test(code) || !/\*\*/.test(code)) return false;
       const inputs = terminalLogs.filter(l => l.type === 'input');
@@ -102,7 +99,7 @@ N = 11  → 1210</code></pre>
 
 # Напиши рішення Задачі #1
 `,
-    hints: ['Перевір: N=5 → 100, N=-5 → 150, N=10 → 900, N=11 → 1210.', 'Повне рішення:<br><code>print(abs(n**3 - n**2))</code>'],
+    hints: ['Це та сама формула, що в Уроці 2. Проганяй по одному: N=5→100, N=-5→150, N=10→900, N=11→1210.'],
     validate: (output, code, terminalLogs) => {
       if (!/\babs\b/.test(code)) return false;
       const inputs = terminalLogs.filter(l => l.type === 'input');
@@ -147,9 +144,9 @@ N=11: (11-1)%3 = 10%3 = 1 → False ✅</code></pre>
 # else:
 #     print(False)
 `,
-    hints: ['Ключ: якщо (N-1) кратне 3 → X є цілим. N=10 → 3. N=11 → False.', 'Повне рішення:<br><code>if (n - 1) % 3 == 0:</code><br><code>&nbsp;&nbsp;&nbsp;&nbsp;print((n - 1) // 3)</code><br><code>else:</code><br><code>&nbsp;&nbsp;&nbsp;&nbsp;print(False)</code>'],
+    hints: ['X = (N-1)/3 є цілим лише коли (N-1) ділиться на 3 без залишку. Перевір кратність через %, і виведи або частку (//), або False.'],
     validate: (output, code, terminalLogs) => {
-      if (!/%/.test(code) || !/ \/\//.test(code)) return false;
+      if (!/%/.test(code) || !/\/\//.test(code)) return false;
       const inputs = terminalLogs.filter(l => l.type === 'input');
       if (!inputs.length) return false;
       const n = parseInt(inputs[inputs.length-1].value);
@@ -181,7 +178,7 @@ N=4   → 1</code></pre>
 
 # Напиши рішення Задачі #4
 `,
-    hints: ['Перевір: N=10 → 3, N=11 → False, N=1 → 0, N=4 → 1.', 'Повне рішення:<br><code>if (n - 1) % 3 == 0:</code><br><code>&nbsp;&nbsp;&nbsp;&nbsp;print((n - 1) // 3)</code><br><code>else:</code><br><code>&nbsp;&nbsp;&nbsp;&nbsp;print(False)</code>'],
+    hints: ['Та сама логіка, що в Уроці 4. Перевір на всіх: N=10→3, N=11→False, N=1→0, N=4→1.'],
     validate: (output, code, terminalLogs) => {
       const inputs = terminalLogs.filter(l => l.type === 'input');
       if (!inputs.length) return false;
@@ -213,7 +210,7 @@ N=4   → 1</code></pre>
 
 # Задача 4: якщо (n-1) % 3 == 0 → вивести x, інакше False
 `,
-    hints: ['Задача 1: <code>print(abs(n**3 - n**2))</code>', 'Задача 4: <code>if (n-1) % 3 == 0: print((n-1)//3)</code><br><code>else: print(False)</code>', 'Повне рішення:<br><code>print(abs(n**3 - n**2))</code><br><code>if (n-1) % 3 == 0: print((n-1)//3)</code><br><code>else: print(False)</code>'],
+    hints: ['Дві незалежні відповіді для одного N: спершу модуль різниці куба і квадрата, потім перевірка кратності (N-1) на 3.'],
     validate: (output, code, terminalLogs) => {
       if (!/\babs\b/.test(code) || !/%/.test(code)) return false;
       const inputs = terminalLogs.filter(l => l.type === 'input');
@@ -240,7 +237,7 @@ N=4   → 1</code></pre>
     `,
     initialCode: `# Розв'яжи Задачу #1 з нуля
 `,
-    hints: ['<code>n = int(input())</code>', '<code>print(abs(n**3 - n**2))</code>'],
+    hints: ['Формула задачі #1 — у Довіднику (🧮 Математика). Спробуй пригадати її самостійно: модуль різниці куба та квадрата.'],
     validate: (output, code, terminalLogs) => {
       if (!/\babs\b/.test(code)) return false;
       const inputs = terminalLogs.filter(l => l.type === 'input');
@@ -264,10 +261,7 @@ N=4   → 1</code></pre>
     `,
     initialCode: `# Розв'яжи Задачу #4 з нуля
 `,
-    hints: [
-      'Перевір кратність: <code>if (n-1) % 3 == 0:</code>',
-      '<code>print((n-1)//3)</code> або <code>print(False)</code>'
-    ],
+    hints: ['Згадай задачу #4 з Уроку 4. Ключ — перевірка кратності (N-1) на 3, інакше виводимо False.'],
     validate: (output, code, terminalLogs) => {
       if (!/%/.test(code)) return false;
       const inputs = terminalLogs.filter(l => l.type === 'input');
@@ -306,9 +300,9 @@ N=4   → 1</code></pre>
 
 # Задача 4: X = (N-1)/3
 `,
-    hints: ['Задача 1: <code>print(abs(n**3 - n**2))</code>', 'Задача 4: <code>if (n-1) % 3 == 0: print((n-1)//3)</code><br><code>else: print(False)</code>'],
+    hints: ['Об\'єднай обидві задачі для одного N: модуль різниці степенів і перевірку кратності (N-1) на 3.'],
     validate: (output, code, terminalLogs) => {
-      if (!/\babs\b/.test(code) || !/%/.test(code) || !/ \/\//.test(code)) return false;
+      if (!/\babs\b/.test(code) || !/%/.test(code) || !/\/\//.test(code)) return false;
       const inputs = terminalLogs.filter(l => l.type === 'input');
       if (!inputs.length) return false;
       const n = parseInt(inputs[inputs.length-1].value);

@@ -39,7 +39,7 @@ n = int(input())
 # square = n ** 2
 # result = abs(cube - square)
 `,
-    hints: ['Назви змінних чітко: <code>cube</code>, <code>square</code>, <code>result</code>', 'Повне рішення:<br><code>cube = n ** 3</code><br><code>square = n ** 2</code><br><code>result = abs(cube - square)</code><br><code>print(result)</code>'],
+    hints: ['Дай змінним зрозумілі імена (cube, square, result) і збери відповідь із куба, квадрата та модуля їх різниці.'],
     validate: (output, code, terminalLogs) => {
       if (!/\babs\b/.test(code) || !/\*\*/.test(code)) return false;
       const inputs = terminalLogs.filter(l => l.type === 'input');
@@ -80,7 +80,7 @@ if (n - 1) % 3 == 0:
 else:
     print(False)
 `,
-    hints: ['Коментар пояснює НАВІЩО: <code># (N-1) кратне 3 → X ціле</code>', 'Повний приклад:<br><code># (N-1) кратне 3 → X ціле</code><br><code>if (n - 1) % 3 == 0:</code><br><code>&nbsp;&nbsp;&nbsp;&nbsp;print((n - 1) // 3)  # X = (N-1)/3</code><br><code>else:</code><br><code>&nbsp;&nbsp;&nbsp;&nbsp;print(False)  # X не ціле</code>'],
+    hints: ['Коментар має пояснювати НАВІЩО рядок, а не що він робить. Наприклад: чому саме кратність (N-1) на 3 робить X цілим.'],
     validate: (output, code, terminalLogs) => {
       if (!/#/.test(code)) return false;
       const inputs = terminalLogs.filter(l => l.type === 'input');
@@ -137,7 +137,7 @@ attempt_count = 0
 
 # Виведи результат
 `,
-    hints: ['Змінні вже є! Напиши: <code>while user_guess != secret_number:</code>', 'Всередині: <code>user_guess = int(input(...))</code> і <code>attempt_count += 1</code>', 'Повне рішення:<br><code>while user_guess != secret_number:</code><br><code>&nbsp;&nbsp;&nbsp;&nbsp;user_guess = int(input("Спроба: "))</code><br><code>&nbsp;&nbsp;&nbsp;&nbsp;attempt_count += 1</code><br><code>print(f"Вгадав за {attempt_count} спроб!")</code>'],
+    hints: ['Змінні з хорошими іменами вже задані. Цикл повторюється, поки спроба не дорівнює секрету; усередині — нове введення і +1 до лічильника спроб.'],
     validate: (output, code, terminalLogs) => {
       const hasGoodNames = /secret_number|user_guess|attempt_count/.test(code);
       if (!hasGoodNames) return false;
@@ -179,7 +179,7 @@ cycle_length = 3
 # for index in range(element_count):
 #     current_element = (index % cycle_length) + 1
 `,
-    hints: ['<code>for index in range(element_count):</code>', '<code>current_element = (index % cycle_length) + 1</code>', 'Повне рішення:<br><code>for index in range(element_count):</code><br><code>&nbsp;&nbsp;&nbsp;&nbsp;current_element = (index % cycle_length) + 1</code><br><code>&nbsp;&nbsp;&nbsp;&nbsp;print(current_element)</code>'],
+    hints: ['Імена element_count, cycle_length, index уже задані — використай їх замість коротких n, i. Формула послідовності — та сама (index % cycle_length) + 1.'],
     validate: (output, code, terminalLogs) => {
       if (!/\bfor\b/.test(code) || !/%/.test(code)) return false;
       const inputs = terminalLogs.filter(l => l.type === 'input');
@@ -226,7 +226,7 @@ base_number = int(input())
 #     four_digit = base_number * 10 + digit
 #     if four_digit % 3 == 0: print(four_digit)
 `,
-    hints: ['<code>for digit in range(10):</code>', '<code>four_digit = base_number * 10 + digit</code>', 'Повне рішення:<br><code>for digit in range(10):</code><br><code>&nbsp;&nbsp;&nbsp;&nbsp;four_digit = base_number * 10 + digit</code><br><code>&nbsp;&nbsp;&nbsp;&nbsp;if four_digit % 3 == 0:</code><br><code>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;print(four_digit)</code>'],
+    hints: ['Використай зрозумілі імена digit і four_digit. Логіка — як у задачі #3: цикл по цифрах 0–9, нове число, перевірка кратності 3.'],
     validate: (output, code, terminalLogs) => {
       if (!/\bfor\b/.test(code) || !/%/.test(code)) return false;
       const inputs = terminalLogs.filter(l => l.type === 'input');
@@ -267,7 +267,7 @@ numbers_sum = int(input())
 # Знайди middle = numbers_sum // 3
 # Виведи: middle-1, middle, middle+1
 `,
-    hints: ['<code>middle = numbers_sum // 3</code>', 'Виведи: <code>print(middle - 1, middle, middle + 1)</code>', 'Повне рішення:<br><code>middle = numbers_sum // 3</code><br><code>print(middle - 1, middle, middle + 1)</code>'],
+    hints: ['Змінна numbers_sum уже задана. Середнє число — ціле ділення суми на 3, далі виведи сусідів зліва і справа від нього.'],
     validate: (output, code, terminalLogs) => {
       const inputs = terminalLogs.filter(l => l.type === 'input');
       if (!inputs.length) return false;
@@ -343,7 +343,7 @@ attempt_count = 0
 # Напиши while цикл з підказками "Більше! ↑" і "Менше! ↓"
 # Після виходу виведи: f"Вгадав за {attempt_count} спроб! 🎉"
 `,
-    hints: ['Змінні вже є! Напиши: <code>while user_guess != secret_number:</code>', 'Всередині: <code>if user_guess < secret_number: print("Більше! ↑")</code>', 'Повне рішення:<br><code>while user_guess != secret_number:</code><br><code>&nbsp;&nbsp;&nbsp;&nbsp;user_guess = int(input("Твоя спроба: "))</code><br><code>&nbsp;&nbsp;&nbsp;&nbsp;attempt_count += 1</code><br><code>&nbsp;&nbsp;&nbsp;&nbsp;if user_guess &lt; secret_number: print("Більше! ↑")</code><br><code>&nbsp;&nbsp;&nbsp;&nbsp;elif user_guess &gt; secret_number: print("Менше! ↓")</code><br><code>print(f"Вгадав за {attempt_count} спроб! 🎉")</code>'],
+    hints: ['Імена secret_number, user_guess, attempt_count уже задані. У циклі підказуй словами «Більше! ↑» / «Менше! ↓» і рахуй кожну спробу.'],
     validate: (output, code, terminalLogs) => {
       const hasGoodNames = /secret_number|user_guess|attempt_count/.test(code);
       if (!hasGoodNames) return false;
@@ -376,11 +376,7 @@ n = int(input())
 
 # Напиши рішення з коментарями та хорошими змінними
 `,
-    hints: [
-      'Для заліку достатньо Задачі 1 з коментарями.',
-      'Назви: <code>cube</code>, <code>square</code>, <code>result</code> — і коментар до кожного рядка.',
-      'Повне рішення:<br><code>cube = n ** 3       # куб числа</code><br><code>square = n ** 2     # квадрат числа</code><br><code>result = abs(cube - square)  # різниця по модулю</code><br><code>print(result)</code>'
-    ],
+    hints: ['Це твій фінальний конспект. Для кожної задачі: коментар-заголовок, зрозумілі імена змінних і пояснення нетривіальних рядків. Для заліку достатньо задачі #1 з коментарями.'],
     validate: (output, code, terminalLogs) => {
       const hasComments = (code.match(/#/g) || []).length >= 3;
       if (!hasComments) return false;

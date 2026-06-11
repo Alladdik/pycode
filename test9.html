@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PyCode Hub — Тест 9: Чистий код</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600&family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <canvas id="confetti-canvas"></canvas>
+    <div class="app-container">
+        <header class="navbar">
+            <div class="logo"><span class="logo-icon">🐍</span><span class="logo-text">PyCode Hub</span></div>
+            <div class="progress-container">
+                <span class="progress-title">Тест 9 ✨</span>
+                <span id="nav-counter" style="font-size:0.82rem;font-weight:700;color:var(--text-muted)">0 / 0</span>
+            </div>
+            <div class="navbar-right">
+                <button class="btn btn-secondary btn-sm" onclick="location.href='lesson9.html'">← Модуль 9</button>
+                <button class="btn btn-primary btn-sm" onclick="location.href='final.html'">⭐ Фінал 1–5 →</button>
+                <div class="theme-switcher"><span class="theme-label">🎨</span>
+                    <div class="accent-colors">
+                        <button class="accent-dot active" data-color="indigo" style="background:#6366f1"></button>
+                        <button class="accent-dot" data-color="emerald" style="background:#10b981"></button>
+                        <button class="accent-dot" data-color="rose" style="background:#f43f5e"></button>
+                        <button class="accent-dot" data-color="amber" style="background:#f59e0b"></button>
+                        <button class="accent-dot" data-color="cyan" style="background:#06b6d4"></button>
+                    </div>
+                </div>
+                <div class="user-stats"><span class="badge badge-indigo">Тест ✨</span></div>
+            </div>
+        </header>
+        <main class="quiz-main"><div class="quiz-wrap"><div id="quiz-root"></div></div></main>
+    </div>
+    <script src="test9-data.js"></script>
+    <script src="quiz-engine.js"></script>
+    <script src="menu.js"></script>
+</body>
+</html>

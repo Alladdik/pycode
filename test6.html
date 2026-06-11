@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PyCode Hub — Тренажер: Числа та цифри</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600&family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        body { overflow-y: auto; }
+        .app-container { height: auto; min-height: 100vh; }
+        .quiz-main { flex: 1; display: flex; align-items: flex-start; justify-content: center; padding: 1.4rem 1rem 3rem; }
+        .quiz-wrap { width: 100%; max-width: 660px; }
+        .quiz-screen { display: none; }
+        .quiz-screen.active { display: block; }
+
+        /* ── Segmented progress (Duolingo bar) ── */
+        .seg-bar { display: flex; gap: 5px; margin-bottom: 1.4rem; }
+        .seg { flex: 1; height: 9px; border-radius: 9999px; background: var(--bg-panel-raised); border: 1px solid var(--border); transition: all 0.35s cubic-bezier(0.16,1,0.3,1); }
+        .seg.done { background: var(--success); border-color: var(--success); }
+        .seg.miss { background: var(--warning); border-color: var(--warning); }
+        .seg.cur  { background: var(--accent); border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft); }
+
+        /* ── START ── */
+        .start-card { background: var(--bg-panel); border: 1px solid var(--border); border-radius: var(--r-lg); box-shadow: var(--s-xl); padding: 3rem 2.5rem; text-align: center; animation: fadeUp 0.4s cubic-bezier(0.16,1,0.3,1); }
+        .start-hero { font-size: 4.5rem; margin-bottom: 0.8rem; display: block; animation: float 3.5s ease-in-out infinite; }
+        @keyframes float { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-9px); } }
+        .start-card h1 { font-family: var(--f-disp); font-size: 2rem; font-weight: 800; color: var(--text-primary); margin-bottom: 0.45rem; }
+        .start-sub { color: var(--text-muted); font-size: 0.92rem; margin-bottom: 1.8rem; }
+        .type-chips { display: flex; flex-wrap: wrap; gap: 0.5rem; justify-content: center; margin-bottom: 1.8rem; }
+        .type-chip { padding: 0.35rem 0.85rem; border-radius: 9999px; font-size: 0.78rem; font-weight: 700; border: 1.5px solid var(--accent-border); background: var(--accent-soft); color: var(--accent-text); }
+        .start-note { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; margin-bottom: 1.8rem; }
+        .note-pill { background: var(--bg-panel-raised); border: 1px solid var(--border); border-radius: var(--r-md); padding: 0.5rem 1rem; font-size: 0.82rem; font-weight: 600; color: var(--text-muted); }
+        .best-row { background: var(--accent-soft); border: 1px solid var(--accent-border); border-radius: var(--r-md); padding: 0.6rem 1.2rem; font-size: 0.83rem; font-weight: 600; color: var(--accent-text); margin-bottom: 1.6rem; display: none; }
+        .btn-lg { padding: 0.85rem 2.8rem; font-size: 1rem; }
+        .kbd-tip { font-size: 0.73rem; color: var(--text-faint); margin-top: 0.9rem; }
+        .kbd { display: inline-block; background: var(--bg-panel-raised); border: 1px solid var(--border); border-radius: 4px; padding: 0.08rem 0.38rem; font-family: var(--f-code); font-size: 0.7rem; color: var(--text-muted); }
+
+        /* ── EXERCISE CARD ── */
+        .ex-card { background: var(--bg-panel); border: 1px solid var(--border); border-radius: var(--r-lg); box-shadow: var(--s-xl); overflow: hidden; }
+        .ex-head { padding: 0.8rem 1.5rem; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--border); background: var(--bg-panel-raised); }
+        .ex-type-badge { padding: 0.24rem 0.8rem; border-radius: 9999px; font-size: 0.7rem; font-weight: 800; letter-spacing: 0.4px; border: 1.5px solid var(--accent-border); background: var(--accent-soft); color: var(--accent-text); text-transform: uppercase; }
+        .ex-counter { font-size: 0.8rem; font-weight: 700; color: var(--text-muted); }
+        .ex-body { padding: 1.5rem 1.7rem 0.6rem; }
+        .ex-prompt { font-family: var(--f-disp); font-size: 1.12rem; font-weight: 700; color: var(--text-primary); line-height: 1.4; margin-bottom: 1.1rem; }
+
+        .ex-code { background: #1a2236; border: 1px solid rgba(255,255,255,0.07); border-radius: var(--r-md); padding: 0.9rem 1.1rem; margin-bottom: 1.25rem; font-family: var(--f-code); font-size: 0.9rem; color: #c8d8f0; line-height: 1.65; white-space: pre; overflow-x: auto; box-shadow: 0 4px 14px rgba(10,15,30,0.2); }
+        .ex-code::-webkit-scrollbar { height: 4px; }
+        .ex-code::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 999px; }
+
+        /* choice options */
+        .opts { display: grid; grid-template-columns: 1fr 1fr; gap: 0.6rem; }
+        @media (max-width: 480px) { .opts { grid-template-columns: 1fr; } }
+        .opt-btn { background: var(--bg-panel-raised); border: 2px solid var(--border); border-radius: var(--r-md); padding: 0.8rem 1rem; text-align: left; font-family: var(--f-code); font-size: 0.9rem; font-weight: 500; color: var(--text-body); cursor: pointer; transition: all 0.15s cubic-bezier(0.4,0,0.2,1); line-height: 1.4; word-break: break-word; }
+        .opt-letter { display: inline-block; background: rgba(0,0,0,0.06); color: var(--text-muted); border-radius: 4px; font-size: 0.68rem; font-weight: 800; padding: 0.05rem 0.32rem; margin-right: 0.45rem; font-family: var(--f-ui); letter-spacing: 0.5px; transition: all 0.15s; }
+        .opt-btn:hover:not(.locked) { border-color: var(--accent-border); background: var(--accent-soft); color: var(--accent-text); transform: translateY(-1px); box-shadow: var(--s-sm); }
+        .opt-btn:hover:not(.locked) .opt-letter { background: var(--accent-border); color: var(--accent-text); }
+        .opt-btn.picked { border-color: var(--accent); background: var(--accent-soft); color: var(--accent-text); font-weight: 600; }
+        .opt-btn.picked .opt-letter { background: var(--accent-border); color: var(--accent-text); }
+        .opt-btn.correct { border-color: var(--success); background: var(--success-bg); color: var(--success); }
+        .opt-btn.wrong   { border-color: var(--error);   background: var(--error-bg);   color: var(--error); }
+        .opt-btn.locked  { cursor: default; pointer-events: none; }
+
+        /* input */
+        .ex-input { width: 100%; background: var(--bg-panel-raised); border: 2px solid var(--border); border-radius: var(--r-md); padding: 0.85rem 1.1rem; font-family: var(--f-code); font-size: 1rem; color: var(--text-primary); outline: none; transition: all 0.15s; }
+        .ex-input:focus { border-color: var(--accent); background: var(--accent-soft); }
+        .ex-input.correct { border-color: var(--success); background: var(--success-bg); color: var(--success); }
+        .ex-input.wrong   { border-color: var(--error);   background: var(--error-bg);   color: var(--error); }
+
+        /* fill — blank slot + token bank */
+        .fill-code { background: #1a2236; border: 1px solid rgba(255,255,255,0.07); border-radius: var(--r-md); padding: 1rem 1.1rem; margin-bottom: 1.1rem; font-family: var(--f-code); font-size: 1rem; color: #c8d8f0; line-height: 1.7; white-space: pre-wrap; }
+        .blank-slot { display: inline-block; min-width: 48px; text-align: center; padding: 0.1rem 0.55rem; margin: 0 0.15rem; border-radius: 6px; border: 2px dashed rgba(255,255,255,0.35); color: #fff; font-weight: 700; cursor: pointer; transition: all 0.15s; }
+        .blank-slot.filled { border-style: solid; border-color: var(--accent); background: rgba(99,102,241,0.25); }
+        .blank-slot.correct { border-style: solid; border-color: #4ade80; background: rgba(74,222,128,0.22); }
+        .blank-slot.wrong   { border-style: solid; border-color: #fca5a5; background: rgba(252,165,165,0.18); }
+        .token-bank { display: flex; flex-wrap: wrap; gap: 0.55rem; justify-content: center; }
+        .token { background: var(--bg-panel-raised); border: 2px solid var(--border); border-radius: var(--r-md); padding: 0.55rem 1.2rem; font-family: var(--f-code); font-size: 0.95rem; font-weight: 700; color: var(--text-body); cursor: pointer; transition: all 0.15s cubic-bezier(0.4,0,0.2,1); }
+        .token:hover:not(.locked) { border-color: var(--accent); background: var(--accent-soft); color: var(--accent-text); transform: translateY(-2px); box-shadow: var(--s-sm); }
+        .token.used { opacity: 0.35; pointer-events: none; }
+        .token.locked { pointer-events: none; }
+
+        /* indent */
+        .indent-list { display: flex; flex-direction: column; gap: 0.45rem; }
+        .indent-row { display: flex; align-items: center; gap: 0.6rem; }
+        .indent-ctrls { display: flex; gap: 0.25rem; flex-shrink: 0; }
+        .ind-btn { width: 30px; height: 30px; border-radius: 8px; border: 1.5px solid var(--border); background: var(--bg-panel-raised); color: var(--text-muted); font-size: 1.05rem; font-weight: 800; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.13s; line-height: 1; }
+        .ind-btn:hover:not(:disabled) { border-color: var(--accent); color: var(--accent); background: var(--accent-soft); }
+        .ind-btn:disabled { opacity: 0.3; cursor: default; }
+        .indent-code { flex: 1; background: #1a2236; border: 1px solid rgba(255,255,255,0.07); border-left: 3px solid var(--accent); border-radius: var(--r-sm); padding: 0.5rem 0.8rem; font-family: var(--f-code); font-size: 0.9rem; color: #c8d8f0; white-space: pre; overflow-x: auto; transition: padding-left 0.18s cubic-bezier(0.16,1,0.3,1); }
+        .indent-code.correct { border-left-color: #4ade80; }
+        .indent-code.wrong   { border-left-color: #fca5a5; }
+        .ind-dot { font-size: 0.7rem; color: var(--text-faint); width: 14px; text-align: center; flex-shrink: 0; }
+
+        /* order */
+        .order-zone { min-height: 54px; border: 2px dashed var(--border); border-radius: var(--r-md); padding: 0.6rem; margin-bottom: 1rem; display: flex; flex-direction: column; gap: 0.4rem; transition: all 0.15s; }
+        .order-zone.has-items { border-style: solid; border-color: var(--accent-border); }
+        .order-zone-empty { color: var(--text-faint); font-size: 0.82rem; text-align: center; padding: 0.6rem; font-style: italic; }
+        .order-line { background: #1a2236; border: 1px solid rgba(255,255,255,0.08); border-radius: var(--r-sm); padding: 0.5rem 0.85rem; font-family: var(--f-code); font-size: 0.88rem; color: #c8d8f0; white-space: pre; cursor: pointer; display: flex; align-items: center; gap: 0.6rem; transition: all 0.13s; }
+        .order-line .ol-idx { background: var(--accent); color: #fff; border-radius: 5px; font-size: 0.7rem; font-weight: 800; min-width: 18px; height: 18px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+        .order-line:hover:not(.locked) { border-color: var(--error); }
+        .order-line.ok   { border-color: #4ade80; }
+        .order-line.bad  { border-color: #fca5a5; }
+        .order-line.locked { cursor: default; }
+        .order-bank { display: flex; flex-direction: column; gap: 0.4rem; }
+        .bank-line { background: var(--bg-panel-raised); border: 2px solid var(--border); border-radius: var(--r-sm); padding: 0.5rem 0.85rem; font-family: var(--f-code); font-size: 0.88rem; color: var(--text-body); white-space: pre; cursor: pointer; transition: all 0.13s; }
+        .bank-line:hover:not(.locked) { border-color: var(--accent); background: var(--accent-soft); color: var(--accent-text); transform: translateX(3px); }
+        .bank-line.used { display: none; }
+        .bank-line.locked { pointer-events: none; }
+
+        /* ── Feedback panel ── */
+        .ex-feedback { margin: 1.1rem 0 0; border-radius: var(--r-md); padding: 0.9rem 1.1rem; font-size: 0.86rem; line-height: 1.55; display: none; animation: fadeUp 0.25s ease; }
+        .ex-feedback.show { display: block; }
+        .ex-feedback.good { background: var(--success-bg); border: 1px solid var(--success); color: var(--success); }
+        .ex-feedback.bad  { background: var(--warning-bg); border: 1px solid var(--warning); color: var(--warning); }
+        .fb-title { font-family: var(--f-disp); font-weight: 800; font-size: 0.95rem; margin-bottom: 0.3rem; display: flex; align-items: center; gap: 0.4rem; }
+        .fb-correct { font-family: var(--f-code); font-weight: 700; }
+        .fb-exp { color: var(--text-muted); margin-top: 0.4rem; }
+
+        .ex-footer { padding: 1rem 1.7rem 1.4rem; display: flex; justify-content: flex-end; gap: 0.7rem; }
+
+        /* shake */
+        @keyframes shake { 0%,100%{transform:translateX(0);} 20%,60%{transform:translateX(-7px);} 40%,80%{transform:translateX(7px);} }
+        .shake { animation: shake 0.4s; }
+
+        /* ── RESULT ── */
+        .result-top { background: var(--bg-panel); border: 1px solid var(--border); border-radius: var(--r-lg); box-shadow: var(--s-xl); padding: 2.2rem 2rem 1.8rem; text-align: center; animation: fadeUp 0.4s cubic-bezier(0.16,1,0.3,1); margin-bottom: 1rem; }
+        .r-emoji { font-size: 3.8rem; margin-bottom: 0.5rem; display: block; }
+        .r-rank { display: inline-block; font-size: 0.78rem; font-weight: 800; letter-spacing: 1.4px; text-transform: uppercase; padding: 0.28rem 1rem; border-radius: 9999px; border: 2px solid; margin-bottom: 0.65rem; }
+        .result-top h1 { font-family: var(--f-disp); font-size: 1.7rem; font-weight: 800; color: var(--text-primary); margin-bottom: 0.35rem; }
+        .r-score { font-family: var(--f-disp); font-size: 3rem; font-weight: 800; margin: 0.3rem 0 0.2rem; }
+        .s-good { color: var(--success); } .s-ok { color: var(--warning); } .s-bad { color: var(--error); }
+        .r-stars { font-size: 1.5rem; letter-spacing: 0.1rem; margin: 0.2rem 0 0.7rem; }
+        .r-msg { color: var(--text-muted); font-size: 0.9rem; line-height: 1.6; max-width: 410px; margin: 0 auto 1rem; }
+        .r-buttons { display: flex; gap: 0.7rem; justify-content: center; flex-wrap: wrap; }
+
+        .review-section { background: var(--bg-panel); border: 1px solid var(--border); border-radius: var(--r-lg); box-shadow: var(--s-md); overflow: hidden; animation: fadeUp 0.5s 0.1s cubic-bezier(0.16,1,0.3,1) both; }
+        .review-header { padding: 0.9rem 1.4rem; border-bottom: 1px solid var(--border); background: var(--bg-panel-raised); font-family: var(--f-disp); font-size: 0.95rem; font-weight: 700; color: var(--text-primary); }
+        .review-item { padding: 0.85rem 1.4rem; border-bottom: 1px solid var(--border-lite); display: flex; gap: 0.9rem; align-items: flex-start; }
+        .review-item:last-child { border-bottom: none; }
+        .review-item.fail { background: rgba(220,38,38,0.025); }
+        .review-num { font-family: var(--f-disp); font-size: 0.82rem; font-weight: 800; min-width: 2rem; flex-shrink: 0; }
+        .review-item.ok .review-num { color: var(--success); }
+        .review-item.fail .review-num { color: var(--error); }
+        .review-q { font-size: 0.83rem; font-weight: 600; color: var(--text-primary); line-height: 1.4; }
+        .review-exp { font-size: 0.79rem; color: var(--text-muted); line-height: 1.5; margin-top: 0.2rem; }
+
+        @keyframes fadeUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes slideIn { from { opacity: 0; transform: translateX(18px); } to { opacity: 1; transform: translateX(0); } }
+        .slide-in { animation: slideIn 0.28s cubic-bezier(0.16,1,0.3,1); }
+    </style>
+</head>
+<body>
+    <canvas id="confetti-canvas"></canvas>
+
+    <div class="app-container">
+        <header class="navbar">
+            <div class="logo"><span class="logo-icon">🐍</span><span class="logo-text">PyCode Hub</span></div>
+            <div class="progress-container">
+                <span class="progress-title">Тренажер 🎮</span>
+                <span id="nav-counter" style="font-size:0.82rem;font-weight:700;color:var(--text-muted)">0 / 12</span>
+            </div>
+            <div class="navbar-right">
+                <button class="btn btn-secondary btn-sm" onclick="location.href='lesson6.html'">← Модуль 6</button>
+                <button class="btn btn-primary btn-sm" onclick="location.href='lesson7.html'">Модуль 7 →</button>
+                <div class="theme-switcher"><span class="theme-label">🎨</span>
+                    <div class="accent-colors">
+                        <button class="accent-dot active" data-color="indigo" style="background:#6366f1"></button>
+                        <button class="accent-dot" data-color="emerald" style="background:#10b981"></button>
+                        <button class="accent-dot" data-color="rose" style="background:#f43f5e"></button>
+                        <button class="accent-dot" data-color="amber" style="background:#f59e0b"></button>
+                        <button class="accent-dot" data-color="cyan" style="background:#06b6d4"></button>
+                    </div>
+                </div>
+                <div class="user-stats"><span class="badge badge-indigo">Тренажер 🎮</span></div>
+            </div>
+        </header>
+
+        <main class="quiz-main">
+            <div class="quiz-wrap">
+
+                <!-- ── START ── -->
+                <div id="sc-start" class="quiz-screen active">
+                    <div class="start-card">
+                        <span class="start-hero">🎮</span>
+                        <h1>Тренажер: Числа та цифри</h1>
+                        <p class="start-sub">12 коротких вправ у стилі Duolingo — перед фінальним Модулем 7</p>
+                        <div class="type-chips">
+                            <span class="type-chip">🔘 Вибір</span>
+                            <span class="type-chip">⌨️ Введи відповідь</span>
+                            <span class="type-chip">🧩 Заповни пропуск</span>
+                            <span class="type-chip">↹ Виправ табуляцію</span>
+                            <span class="type-chip">🔀 Збери код</span>
+                        </div>
+                        <div class="start-note">
+                            <div class="note-pill">⚡ Миттєвий фідбек</div>
+                            <div class="note-pill">🚫 Без таймера</div>
+                            <div class="note-pill">💚 Можна помилятись</div>
+                        </div>
+                        <div id="best-row" class="best-row"></div>
+                        <button id="btn-start" class="btn btn-primary btn-lg">Почати →</button>
+                        <p class="kbd-tip"><span class="kbd">Enter</span> — перевірити / далі</p>
+                    </div>
+                </div>
+
+                <!-- ── EXERCISE ── -->
+                <div id="sc-ex" class="quiz-screen">
+                    <div class="seg-bar" id="seg-bar"></div>
+                    <div class="ex-card">
+                        <div class="ex-head">
+                            <span id="ex-type-badge" class="ex-type-badge"></span>
+                            <span id="ex-counter" class="ex-counter"></span>
+                        </div>
+                        <div class="ex-body" id="ex-body"></div>
+                        <div class="ex-footer">
+                            <button id="btn-check" class="btn btn-primary" disabled>Перевірити</button>
+                            <button id="btn-next" class="btn btn-success" style="display:none">Далі →</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ── RESULT ── -->
+                <div id="sc-result" class="quiz-screen">
+                    <div class="result-top">
+                        <span id="r-emoji" class="r-emoji"></span>
+                        <div id="r-rank" class="r-rank"></div>
+                        <h1 id="r-title"></h1>
+                        <div id="r-score" class="r-score"></div>
+                        <div id="r-stars" class="r-stars"></div>
+                        <p id="r-msg" class="r-msg"></p>
+                        <div class="r-buttons">
+                            <button id="btn-retry" class="btn btn-secondary">🔄 Ще раз</button>
+                            <button class="btn btn-success" onclick="location.href='lesson7.html'">Модуль 7 →</button>
+                        </div>
+                    </div>
+                    <div class="review-section">
+                        <div class="review-header">📋 Розбір вправ</div>
+                        <div id="review-list"></div>
+                    </div>
+                </div>
+
+            </div>
+        </main>
+    </div>
+
+    <script src="test6-data.js"></script>
+    <script>
+    // ── Theme ──
+    const THEMES = {
+        indigo:  ['#4f46e5','rgba(79,70,229,0.16)','rgba(79,70,229,0.32)','rgba(79,70,229,0.07)','#4338ca'],
+        emerald: ['#059669','rgba(5,150,105,0.18)','rgba(5,150,105,0.32)','rgba(5,150,105,0.07)','#047857'],
+        rose:    ['#e11d48','rgba(225,29,72,0.18)','rgba(225,29,72,0.32)','rgba(225,29,72,0.07)','#be123c'],
+        amber:   ['#d97706','rgba(217,119,6,0.18)','rgba(217,119,6,0.32)','rgba(217,119,6,0.07)','#b45309'],
+        cyan:    ['#0891b2','rgba(8,145,178,0.18)','rgba(8,145,178,0.32)','rgba(8,145,178,0.07)','#0e7490']
+    };
+    function applyTheme(n){ const t=THEMES[n]; if(!t) return; const r=document.documentElement;
+        ['--accent','--accent-glow','--accent-border','--accent-soft','--accent-text'].forEach((p,i)=>r.style.setProperty(p,t[i]));
+        document.querySelectorAll('.accent-dot').forEach(d=>d.classList.toggle('active',d.dataset.color===n));
+        localStorage.setItem('pycode_theme_color',n); }
+    document.querySelectorAll('.accent-dot').forEach(d=>d.addEventListener('click',()=>applyTheme(d.dataset.color)));
+    applyTheme(localStorage.getItem('pycode_theme_color')||'indigo');
+
+    // ── Confetti ──
+    const cvs=document.getElementById('confetti-canvas'), cx=cvs.getContext('2d');
+    let cPts=[], cId=null;
+    function sizeCvs(){ cvs.width=innerWidth; cvs.height=innerHeight; } addEventListener('resize',sizeCvs); sizeCvs();
+    class CP{ constructor(){ this.x=Math.random()*cvs.width; this.y=Math.random()*-cvs.height-20; this.w=Math.random()*9+4; this.h=Math.random()*5+3; this.c=`hsl(${Math.random()*360},78%,62%)`; this.vx=Math.random()*4-2; this.vy=Math.random()*5+3; this.r=Math.random()*360; this.rv=Math.random()*8-4; }
+        step(){ this.x+=this.vx;this.y+=this.vy;this.r+=this.rv; }
+        draw(){ cx.save();cx.translate(this.x,this.y);cx.rotate(this.r*Math.PI/180);cx.fillStyle=this.c;cx.fillRect(-this.w/2,-this.h/2,this.w,this.h);cx.restore(); } }
+    function boom(n=140){ if(cId)cancelAnimationFrame(cId); cPts=Array.from({length:n},()=>new CP());
+        (function loop(){ cx.clearRect(0,0,cvs.width,cvs.height); cPts.forEach(p=>{p.step();p.draw();}); cPts=cPts.filter(p=>p.y<cvs.height+20);
+            if(cPts.length)cId=requestAnimationFrame(loop); else cx.clearRect(0,0,cvs.width,cvs.height); })(); }
+
+    // ── State ──
+    const EX = quizData.exercises, N = EX.length;
+    let idx = 0;
+    let results = [];          // bool per exercise
+    let answered = false;      // current exercise checked?
+    let state = {};            // working answer state for current ex
+
+    const TYPE_LABEL = { choice:'🔘 Вибір', input:'⌨️ Введи відповідь', fill:'🧩 Заповни пропуск', indent:'↹ Табуляція', order:'🔀 Збери код' };
+
+    function show(id){ document.querySelectorAll('.quiz-screen').forEach(s=>s.classList.remove('active')); document.getElementById(id).classList.add('active'); }
+
+    // ── Rank ──
+    function rank(s){
+        if(s===12) return {t:'Code Ninja',   e:'🥷',bg:'rgba(124,58,237,.1)',c:'#7c3aed',b:'rgba(124,58,237,.35)'};
+        if(s>=10)  return {t:'Number Wizard', e:'🧙',bg:'rgba(2,132,199,.1)', c:'#0284c7',b:'rgba(2,132,199,.35)'};
+        if(s>=8)   return {t:'Digit Master',  e:'⚡',bg:'rgba(5,150,105,.1)', c:'#059669',b:'rgba(5,150,105,.35)'};
+        if(s>=5)   return {t:'Учень Python',  e:'🐍',bg:'rgba(217,119,6,.1)', c:'#d97706',b:'rgba(217,119,6,.35)'};
+        return         {t:'Новачок',          e:'🐣',bg:'rgba(100,116,139,.1)',c:'#64748b',b:'rgba(100,116,139,.3)'};
+    }
+
+    function loadBest(){ try{ const b=JSON.parse(localStorage.getItem(quizData.storageKey)); if(!b)return;
+        const rk=rank(b.score); const el=document.getElementById('best-row');
+        el.innerHTML=`🏅 Твій рекорд: <strong>${b.score}/${b.total}</strong> — ${rk.e} ${rk.t} &nbsp;·&nbsp; <span style="opacity:.65">${b.date}</span>`;
+        el.style.display='block'; }catch(e){} }
+    loadBest();
+
+    // ── Segmented bar ──
+    function renderSeg(){
+        const bar=document.getElementById('seg-bar'); bar.innerHTML='';
+        for(let i=0;i<N;i++){ const s=document.createElement('div'); s.className='seg';
+            if(i<idx){ if(results[i]===true) s.classList.add('done'); else if(results[i]===false) s.classList.add('miss'); }
+            else if(i===idx) s.classList.add(answered ? (results[i]?'done':'miss') : 'cur');
+            bar.appendChild(s); }
+    }
+
+    const esc = s => String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+
+    // ── Render current exercise ──
+    function render(){
+        const ex = EX[idx];
+        answered = false; state = {};
+        document.getElementById('ex-type-badge').textContent = TYPE_LABEL[ex.type];
+        document.getElementById('ex-counter').textContent = `${idx+1} / ${N}`;
+        document.getElementById('nav-counter').textContent = `${idx+1} / ${N}`;
+        renderSeg();
+
+        const chk=document.getElementById('btn-check'), nxt=document.getElementById('btn-next');
+        chk.style.display='inline-flex'; chk.disabled=true; chk.textContent='Перевірити';
+        nxt.style.display='none'; nxt.textContent = idx===N-1 ? 'Завершити →' : 'Далі →';
+
+        const body=document.getElementById('ex-body');
+        body.innerHTML = `<div class="ex-prompt">${esc(ex.prompt)}</div>` + buildBody(ex) +
+            `<div id="ex-feedback" class="ex-feedback"></div>`;
+        body.classList.remove('slide-in'); void body.offsetWidth; body.classList.add('slide-in');
+
+        wireBody(ex);
+    }
+
+    // Build inner HTML per type
+    function buildBody(ex){
+        if(ex.type==='choice'){
+            const L=['A','B','C','D'];
+            return `<pre class="ex-code">${esc(ex.code)}</pre>
+              <div class="opts">${ex.options.map((o,i)=>`<button class="opt-btn" data-i="${i}"><span class="opt-letter">${L[i]}</span>${esc(o)}</button>`).join('')}</div>`;
+        }
+        if(ex.type==='input'){
+            return `<pre class="ex-code">${esc(ex.code)}</pre>
+              <input id="ex-input" class="ex-input" type="text" autocomplete="off" spellcheck="false" placeholder="твоя відповідь…">`;
+        }
+        if(ex.type==='fill'){
+            const parts = ex.code.split('▢');
+            const codeHtml = esc(parts[0]) + `<span id="blank" class="blank-slot">?</span>` + esc(parts[1]||'');
+            return `<div class="fill-code">${codeHtml}</div>
+              <div class="token-bank">${ex.bank.map((t,i)=>`<button class="token" data-t="${esc(t)}" data-i="${i}">${esc(t)}</button>`).join('')}</div>`;
+        }
+        if(ex.type==='indent'){
+            return `<div class="indent-list">${ex.lines.map((ln,i)=>`
+                <div class="indent-row" data-i="${i}">
+                    <div class="indent-ctrls">
+                        <button class="ind-btn ind-left" title="менше відступ">‹</button>
+                        <button class="ind-btn ind-right" title="більше відступ">›</button>
+                    </div>
+                    <span class="ind-dot" id="dot-${i}">0</span>
+                    <div class="indent-code" id="code-${i}">${esc(ln.t)}</div>
+                </div>`).join('')}</div>`;
+        }
+        if(ex.type==='order'){
+            // shuffle bank order (indices into ex.lines)
+            let order=[...ex.lines.keys()];
+            do { for(let i=order.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [order[i],order[j]]=[order[j],order[i]]; } }
+            while(order.every((v,i)=>v===i) && ex.lines.length>1);
+            state.shuffle = order;
+            return `<div id="order-zone" class="order-zone"><div class="order-zone-empty">Натискай рядки знизу, щоб зібрати їх тут ↓</div></div>
+              <div id="order-bank" class="order-bank">${order.map(li=>`<div class="bank-line" data-li="${li}">${esc(ex.lines[li])}</div>`).join('')}</div>`;
+        }
+        return '';
+    }
+
+    // Wire events per type
+    function wireBody(ex){
+        const chk=document.getElementById('btn-check');
+        if(ex.type==='choice'){
+            document.querySelectorAll('.opt-btn').forEach(b=>b.addEventListener('click',()=>{
+                if(answered) return;
+                document.querySelectorAll('.opt-btn').forEach(x=>x.classList.remove('picked'));
+                b.classList.add('picked'); state.sel=parseInt(b.dataset.i); chk.disabled=false;
+            }));
+        }
+        else if(ex.type==='input'){
+            const inp=document.getElementById('ex-input');
+            inp.addEventListener('input',()=>{ chk.disabled = inp.value.trim()===''; });
+            setTimeout(()=>inp.focus(),20);
+        }
+        else if(ex.type==='fill'){
+            const slot=document.getElementById('blank');
+            document.querySelectorAll('.token').forEach(t=>t.addEventListener('click',()=>{
+                if(answered) return;
+                document.querySelectorAll('.token').forEach(x=>x.classList.remove('used'));
+                t.classList.add('used');
+                slot.textContent=t.dataset.t; slot.classList.add('filled');
+                state.fill=t.dataset.t; chk.disabled=false;
+            }));
+            slot.addEventListener('click',()=>{ if(answered) return;
+                slot.textContent='?'; slot.classList.remove('filled'); state.fill=undefined;
+                document.querySelectorAll('.token').forEach(x=>x.classList.remove('used')); chk.disabled=true; });
+        }
+        else if(ex.type==='indent'){
+            state.levels = ex.lines.map(()=>0);
+            chk.disabled=false; // zero indent is a valid (checkable) submission
+            document.querySelectorAll('.indent-row').forEach(row=>{
+                const i=parseInt(row.dataset.i);
+                const apply=()=>{ document.getElementById('code-'+i).style.paddingLeft=(0.8+state.levels[i]*1.6)+'rem';
+                    document.getElementById('dot-'+i).textContent=state.levels[i]; };
+                row.querySelector('.ind-right').addEventListener('click',()=>{ if(answered)return; if(state.levels[i]<3){state.levels[i]++; apply();} });
+                row.querySelector('.ind-left').addEventListener('click',()=>{ if(answered)return; if(state.levels[i]>0){state.levels[i]--; apply();} });
+            });
+        }
+        else if(ex.type==='order'){
+            state.seq=[];
+            const zone=document.getElementById('order-zone');
+            const refresh=()=>{
+                zone.innerHTML = state.seq.length ? '' : '<div class="order-zone-empty">Натискай рядки знизу, щоб зібрати їх тут ↓</div>';
+                zone.classList.toggle('has-items', state.seq.length>0);
+                state.seq.forEach((li,pos)=>{
+                    const d=document.createElement('div'); d.className='order-line';
+                    d.innerHTML=`<span class="ol-idx">${pos+1}</span><span>${esc(ex.lines[li])}</span>`;
+                    d.addEventListener('click',()=>{ if(answered)return;
+                        state.seq.splice(pos,1);
+                        document.querySelector(`.bank-line[data-li="${li}"]`).classList.remove('used');
+                        refresh(); });
+                    zone.appendChild(d);
+                });
+                chk.disabled = state.seq.length !== ex.lines.length;
+            };
+            document.querySelectorAll('.bank-line').forEach(b=>b.addEventListener('click',()=>{
+                if(answered) return;
+                const li=parseInt(b.dataset.li);
+                if(b.classList.contains('used')) return;
+                b.classList.add('used'); state.seq.push(li); refresh();
+            }));
+        }
+    }
+
+    // ── Check current exercise ──
+    function checkEx(){
+        if(answered) return;
+        const ex=EX[idx];
+        let ok=false, correctText='';
+
+        if(ex.type==='choice'){
+            ok = state.sel===ex.correct;
+            correctText = ex.options[ex.correct];
+            document.querySelectorAll('.opt-btn').forEach(b=>{ b.classList.add('locked');
+                const i=parseInt(b.dataset.i);
+                if(i===ex.correct) b.classList.add('correct');
+                else if(i===state.sel) b.classList.add('wrong');
+                b.classList.remove('picked');
+            });
+        }
+        else if(ex.type==='input'){
+            const inp=document.getElementById('ex-input');
+            const val=inp.value.trim().toLowerCase();
+            const accepts=[String(ex.answer).toLowerCase(), ...(ex.accept||[]).map(a=>String(a).toLowerCase())];
+            ok = accepts.includes(val);
+            correctText = ex.answer;
+            inp.disabled=true; inp.classList.add(ok?'correct':'wrong');
+        }
+        else if(ex.type==='fill'){
+            ok = state.fill===ex.answer;
+            correctText = ex.answer;
+            const slot=document.getElementById('blank');
+            slot.classList.remove('filled'); slot.classList.add(ok?'correct':'wrong');
+            if(!ok) slot.textContent=ex.answer;
+            document.querySelectorAll('.token').forEach(t=>t.classList.add('locked'));
+        }
+        else if(ex.type==='indent'){
+            const want=ex.lines.map(l=>l.lvl);
+            ok = state.levels.every((v,i)=>v===want[i]);
+            correctText = ex.lines.map(l=>'▸'.repeat(l.lvl)+(l.lvl?' ':'')+l.t).join('   /   ');
+            ex.lines.forEach((l,i)=>{
+                const codeEl=document.getElementById('code-'+i);
+                codeEl.classList.add(state.levels[i]===l.lvl ? 'correct' : 'wrong');
+            });
+            document.querySelectorAll('.ind-btn').forEach(b=>b.disabled=true);
+        }
+        else if(ex.type==='order'){
+            ok = state.seq.length===ex.lines.length && state.seq.every((li,pos)=>li===pos);
+            correctText = ex.lines.join('  ·  ');
+            document.querySelectorAll('#order-zone .order-line').forEach((d,pos)=>{
+                d.classList.add('locked'); d.classList.add(state.seq[pos]===pos?'ok':'bad');
+            });
+            document.querySelectorAll('.bank-line').forEach(b=>b.classList.add('locked'));
+        }
+
+        answered=true;
+        results[idx]=ok;
+
+        // feedback
+        const fb=document.getElementById('ex-feedback');
+        fb.className='ex-feedback show '+(ok?'good':'bad');
+        if(ok){
+            const cheers=['Чудово! 🎉','Точно! ✨','Так тримати! 💪','Бездоганно! 🌟','Вірно! 🔥'];
+            fb.innerHTML=`<div class="fb-title">✅ ${cheers[Math.floor(Math.random()*cheers.length)]}</div><div class="fb-exp">${esc(ex.explain)}</div>`;
+            boom(90);
+        } else {
+            fb.innerHTML=`<div class="fb-title">💡 Майже!</div>
+                <div>Правильно: <span class="fb-correct">${esc(correctText)}</span></div>
+                <div class="fb-exp">${esc(ex.explain)}</div>`;
+            const card=document.querySelector('.ex-card'); card.classList.remove('shake'); void card.offsetWidth; card.classList.add('shake');
+        }
+
+        renderSeg();
+        document.getElementById('btn-check').style.display='none';
+        const nxt=document.getElementById('btn-next'); nxt.style.display='inline-flex'; nxt.focus();
+    }
+
+    function nextEx(){
+        idx++;
+        if(idx>=N) showResults();
+        else { render(); window.scrollTo({top:0,behavior:'smooth'}); }
+    }
+
+    document.getElementById('btn-check').addEventListener('click', checkEx);
+    document.getElementById('btn-next').addEventListener('click', nextEx);
+
+    // ── Results ──
+    function showResults(){
+        document.getElementById('nav-counter').textContent=`${N} / ${N}`;
+        const score=results.filter(Boolean).length;
+        const pct=score/N, rk=rank(score), stars=Math.round(pct*5);
+        let title,msg;
+        if(score===N){ title='Усе вірно!'; msg='12 з 12 — ти повністю готовий до фінального Модуля 7. Вперед! 🚀'; }
+        else if(score>=10){ title='Майже ідеально!'; msg='Сильний результат. Глянь розбір нижче — і можеш сміливо йти до Модуля 7.'; }
+        else if(score>=8){ title='Дуже добре!'; msg='Гарна робота з числами. Перечитай, де помилився, і рушай далі.'; }
+        else if(score>=5){ title='Непогано!'; msg='База є. Подивись розбір вправ — і за бажання пройди тренажер ще раз.'; }
+        else { title='Ще трохи практики'; msg='Повтори Модуль 6 (abs, **, цифри) і повертайся — з другого разу буде краще 💪'; }
+        const sCls=score>=10?'s-good':score>=6?'s-ok':'s-bad';
+
+        document.getElementById('r-emoji').textContent=rk.e;
+        const rankEl=document.getElementById('r-rank'); rankEl.textContent=rk.t; rankEl.style.cssText=`background:${rk.bg};color:${rk.c};border-color:${rk.b}`;
+        document.getElementById('r-title').textContent=title;
+        document.getElementById('r-score').innerHTML=`<span class="${sCls}">${score}</span><span style="font-size:1.55rem;color:var(--text-muted);font-weight:400"> / ${N}</span>`;
+        document.getElementById('r-stars').textContent='⭐'.repeat(stars)+'☆'.repeat(5-stars);
+        document.getElementById('r-msg').textContent=msg;
+
+        const list=document.getElementById('review-list'); list.innerHTML='';
+        EX.forEach((ex,i)=>{ const ok=results[i];
+            const item=document.createElement('div'); item.className='review-item '+(ok?'ok':'fail');
+            item.innerHTML=`<div class="review-num">${i+1}${ok?' ✅':' ❌'}</div>
+                <div><div class="review-q">${esc(ex.prompt)} <span style="opacity:.55;font-weight:600">[${TYPE_LABEL[ex.type]}]</span></div>
+                ${!ok?`<div class="review-exp">${esc(ex.explain)}</div>`:''}</div>`;
+            list.appendChild(item); });
+
+        show('sc-result'); window.scrollTo({top:0,behavior:'smooth'});
+        if(score>=9) boom(180);
+        try{ const prev=JSON.parse(localStorage.getItem(quizData.storageKey)||'null');
+            if(!prev||score>prev.score) localStorage.setItem(quizData.storageKey,JSON.stringify({score,total:N,date:new Date().toLocaleDateString('uk-UA')})); }catch(e){}
+    }
+
+    // ── Start / Retry ──
+    function startQuiz(){ idx=0; results=[]; show('sc-ex'); render(); window.scrollTo({top:0}); }
+    document.getElementById('btn-start').addEventListener('click', startQuiz);
+    document.getElementById('btn-retry').addEventListener('click', ()=>{ document.getElementById('nav-counter').textContent='0 / '+N; show('sc-start'); loadBest(); window.scrollTo({top:0}); });
+
+    // ── Keyboard ──
+    document.addEventListener('keydown', e=>{
+        const active=document.querySelector('.quiz-screen.active'); if(!active) return;
+        if(active.id==='sc-start' && (e.key==='Enter'||e.key===' ')){ e.preventDefault(); startQuiz(); return; }
+        if(active.id!=='sc-ex') return;
+        const ex=EX[idx];
+        // number keys pick choice option
+        if(!answered && ex.type==='choice' && '1234'.includes(e.key)){
+            const i=parseInt(e.key)-1; const b=document.querySelector(`.opt-btn[data-i="${i}"]`); if(b) b.click();
+        }
+        if(e.key==='Enter'){
+            e.preventDefault();
+            if(answered){ nextEx(); }
+            else if(!document.getElementById('btn-check').disabled){ checkEx(); }
+        }
+    });
+    </script>
+    <script src="menu.js"></script>
+</body>
+</html>
