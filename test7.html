@@ -3,24 +3,26 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PyCode Hub — Тест 7: Задачі #1 та #4</title>
+    <title>PyCode Hub — Тренажер 7: Степінь, модуль і кратність</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600&family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="trainer.css">
 </head>
 <body>
     <canvas id="confetti-canvas"></canvas>
+
     <div class="app-container">
         <header class="navbar">
             <div class="logo"><span class="logo-icon">🐍</span><span class="logo-text">PyCode Hub</span></div>
             <div class="progress-container">
-                <span class="progress-title">Тест 7 📝</span>
-                <span id="nav-counter" style="font-size:0.82rem;font-weight:700;color:var(--text-muted)">0 / 0</span>
+                <span class="progress-title">Тренажер 7 🎮</span>
+                <span id="nav-counter" style="font-size:0.82rem;font-weight:700;color:var(--text-muted)">0 / 12</span>
             </div>
             <div class="navbar-right">
-                <button class="btn btn-secondary btn-sm" onclick="location.href='lesson7.html'">← Модуль 7</button>
-                <button class="btn btn-primary btn-sm" onclick="location.href='lesson8.html'">Модуль 8 →</button>
+                <button id="nav-back" class="btn btn-secondary btn-sm">← Модуль 7</button>
+                <button id="nav-next" class="btn btn-primary btn-sm">Модуль 8 →</button>
                 <div class="theme-switcher"><span class="theme-label">🎨</span>
                     <div class="accent-colors">
                         <button class="accent-dot active" data-color="indigo" style="background:#6366f1"></button>
@@ -30,13 +32,79 @@
                         <button class="accent-dot" data-color="cyan" style="background:#06b6d4"></button>
                     </div>
                 </div>
-                <div class="user-stats"><span class="badge badge-indigo">Тест 📝</span></div>
+                <div class="user-stats"><span class="badge badge-indigo">Тренажер 🎮</span></div>
             </div>
         </header>
-        <main class="quiz-main"><div class="quiz-wrap"><div id="quiz-root"></div></div></main>
+
+        <main class="quiz-main">
+            <div class="quiz-wrap">
+
+                <!-- ── START ── -->
+                <div id="sc-start" class="quiz-screen active">
+                    <div class="start-card">
+                        <span id="start-hero" class="start-hero">🎮</span>
+                        <h1 id="start-title">Тренажер</h1>
+                        <p id="start-sub" class="start-sub"></p>
+                        <div class="type-chips">
+                            <span class="type-chip">🔘 Вибір</span>
+                            <span class="type-chip">⌨️ Введи відповідь</span>
+                            <span class="type-chip">🧩 Заповни пропуск</span>
+                            <span class="type-chip">↹ Виправ табуляцію</span>
+                            <span class="type-chip">🔀 Збери код</span>
+                        </div>
+                        <div class="start-note">
+                            <div class="note-pill">⚡ Миттєвий фідбек</div>
+                            <div class="note-pill">🚫 Без таймера</div>
+                            <div class="note-pill">💚 Можна помилятись</div>
+                        </div>
+                        <div id="best-row" class="best-row"></div>
+                        <button id="btn-start" class="btn btn-primary btn-lg">Почати →</button>
+                        <p class="kbd-tip"><span class="kbd">Enter</span> — перевірити / далі</p>
+                    </div>
+                </div>
+
+                <!-- ── EXERCISE ── -->
+                <div id="sc-ex" class="quiz-screen">
+                    <div class="seg-bar" id="seg-bar"></div>
+                    <div class="ex-card">
+                        <div class="ex-head">
+                            <span id="ex-type-badge" class="ex-type-badge"></span>
+                            <span id="ex-counter" class="ex-counter"></span>
+                        </div>
+                        <div class="ex-body" id="ex-body"></div>
+                        <div class="ex-footer">
+                            <button id="btn-check" class="btn btn-primary" disabled>Перевірити</button>
+                            <button id="btn-next" class="btn btn-success" style="display:none">Далі →</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ── RESULT ── -->
+                <div id="sc-result" class="quiz-screen">
+                    <div class="result-top">
+                        <span id="r-emoji" class="r-emoji"></span>
+                        <div id="r-rank" class="r-rank"></div>
+                        <h1 id="r-title"></h1>
+                        <div id="r-score" class="r-score"></div>
+                        <div id="r-stars" class="r-stars"></div>
+                        <p id="r-msg" class="r-msg"></p>
+                        <div class="r-buttons">
+                            <button id="btn-retry" class="btn btn-secondary">🔄 Ще раз</button>
+                            <button id="result-next" class="btn btn-success">Далі →</button>
+                        </div>
+                    </div>
+                    <div class="review-section">
+                        <div class="review-header">📋 Розбір вправ</div>
+                        <div id="review-list"></div>
+                    </div>
+                </div>
+
+            </div>
+        </main>
     </div>
+
     <script src="test7-data.js"></script>
-    <script src="quiz-engine.js"></script>
+    <script src="trainer.js"></script>
     <script src="menu.js"></script>
 </body>
 </html>

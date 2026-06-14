@@ -1,104 +1,138 @@
-// TEST 7 — Модуль 7: Задача #1 |N³−N²| та Задача #4 (N−1)/3
-const quizData = {
-  title: 'Тест 7: Задачі #1 та #4',
-  subtitle: '12 запитань — abs, степінь та перевірка кратності',
-  storageKey: 'pycode_test7_result',
+// TRAINER 7 — Duolingo-стиль (після Модуля 7): степінь, модуль, кратність
+// Типи вправ: choice | input | fill | indent | order
+var quizData = {
+  title: 'Тренажер: Степінь і кратність',
+  subtitle: '12 коротких вправ у стилі Duolingo — після Модуля 7',
   hero: '🏆',
+  storageKey: 'pycode_test7_result',
+  confettiFrom: 0.75,
   nav: { backLabel: '← Модуль 7', backHref: 'lesson7.html', nextLabel: 'Модуль 8 →', nextHref: 'lesson8.html' },
-  questions: [
+  exercises: [
+
+    // 1 — choice (степінь)
     {
-      module: 1, moduleLabel: '#1 Куб−Квадрат',
-      question: 'Що поверне цей вираз?',
+      type: 'choice',
+      prompt: 'Що виведе цей код?',
       code: 'print(5 ** 2)',
       options: ['10', '25', '7', '52'],
       correct: 1,
-      explanation: '** — піднесення до степеня. 5 ** 2 = 5·5 = 25 (квадрат). Це не множення на 2.'
+      explain: '** — піднесення до степеня. 5 ** 2 = 5·5 = 25 (квадрат). Це не множення на 2.'
     },
+
+    // 2 — input (модуль)
     {
-      module: 1, moduleLabel: '#1 Куб−Квадрат',
-      question: 'Який результат?',
+      type: 'input',
+      prompt: 'Введи, що виведе код:',
       code: 'print(abs(-12))',
-      options: ['-12', '12', '0', '24'],
-      correct: 1,
-      explanation: 'abs() повертає модуль — число без знака. abs(-12) = 12.'
+      answer: '12',
+      explain: 'abs() повертає модуль — число без знака. abs(-12) = 12.'
     },
+
+    // 3 — fill (куб)
     {
-      module: 1, moduleLabel: '#1 Куб−Квадрат',
-      question: 'Який порядок дій у виразі n**3 - n**2?',
-      code: 'n = 2\nprint(n**3 - n**2)',
-      options: ['(n³) − (n²)', 'n^(3−n)^2', '((n³)−n)²', 'n^(3−2)'],
+      type: 'fill',
+      prompt: 'Встав оператор, щоб порахувати КУБ числа:',
+      code: 'cube = n ▢ 3',
+      bank: ['*', '**', '//', '%'],
+      answer: '**',
+      explain: 'Куб — це степінь 3: n ** 3. Одна зірочка (*) дала б множення, а не степінь.'
+    },
+
+    // 4 — choice (порядок дій)
+    {
+      type: 'choice',
+      prompt: 'Що виведе код? (звернути увагу на порядок дій)',
+      code: 'n = 2\nprint(n ** 3 - n ** 2)',
+      options: ['4', '2', '6', '16'],
       correct: 0,
-      explanation: '** виконується ПЕРШИМ (раніше за віднімання). Тому спершу n³ і n², потім різниця: 8 − 4 = 4.'
+      explain: '** виконується ПЕРШИМ: n³=8, n²=4. Лише потім віднімання: 8 − 4 = 4.'
     },
+
+    // 5 — input (модуль різниці, від’ємне N)
     {
-      module: 1, moduleLabel: '#1 Куб−Квадрат',
-      question: 'Що виведе Задача #1 для N=4?',
-      code: 'n = 4\nprint(abs(n**3 - n**2))',
-      options: ['16', '48', '64', '80'],
-      correct: 1,
-      explanation: 'N³=64, N²=16, різниця 64−16=48. Модуль не змінює додатне число → 48.'
+      type: 'input',
+      prompt: 'Введи результат:',
+      code: 'n = -2\nprint(abs(n ** 3 - n ** 2))',
+      answer: '12',
+      explain: '(-2)³ = -8, (-2)² = 4. Різниця -8 − 4 = -12, а abs() прибирає мінус → 12.'
     },
+
+    // 6 — choice (межовий випадок)
     {
-      module: 1, moduleLabel: '#1 Куб−Квадрат',
-      question: 'Чому в Задачі #1 потрібен саме abs()? Що виведе код для N=−2?',
-      code: 'n = -2\nprint(abs(n**3 - n**2))',
-      options: ['−12', '12', '−4', '4'],
-      correct: 1,
-      explanation: 'N³=−8, N²=4, різниця −8−4=−12. abs() прибирає мінус → 12. Без abs() було б −12.'
-    },
-    {
-      module: 1, moduleLabel: '#1 Куб−Квадрат',
-      question: 'Що виведе Задача #1 для N=1?',
-      code: 'n = 1\nprint(abs(n**3 - n**2))',
-      options: ['0', '1', '2', '−1'],
+      type: 'choice',
+      prompt: 'Що виведе код для N=1?',
+      code: 'n = 1\nprint(abs(n ** 3 - n ** 2))',
+      options: ['0', '1', '2', '-1'],
       correct: 0,
-      explanation: '1³=1 і 1²=1, різниця 1−1=0. Для N=1 та N=0 відповідь завжди 0.'
+      explain: '1³=1 і 1²=1, різниця 1 − 1 = 0. Для N=1 і N=0 результат завжди 0.'
     },
+
+    // 7 — fill (перевірка кратності)
     {
-      module: 4, moduleLabel: '#4 (N−1)/3',
-      question: 'Яка умова перевіряє, що X=(N−1)/3 буде ЦІЛИМ числом?',
-      options: ['(n - 1) % 3 == 0', '(n - 1) // 3 == 0', 'n % 3 == 1', '(n - 1) / 3 == 0'],
-      correct: 0,
-      explanation: 'X ціле, коли (N−1) ділиться на 3 без залишку, тобто (n-1) % 3 == 0. // дало б саму частку, а не перевірку.'
+      type: 'fill',
+      prompt: 'Встав оператор, щоб перевірити, що (n − 1) ділиться на 3 БЕЗ остачі:',
+      code: 'if (n - 1) ▢ 3 == 0:',
+      bank: ['%', '//', '/', '**'],
+      answer: '%',
+      explain: '% — остача від ділення. Якщо остача 0 — число ділиться рівно. // дало б саму частку, а не перевірку.'
     },
+
+    // 8 — choice (ціле ділення)
     {
-      module: 4, moduleLabel: '#4 (N−1)/3',
-      question: 'Що виведе Задача #4 для N=10?',
-      code: 'n = 10\nif (n-1) % 3 == 0:\n    print((n-1)//3)\nelse:\n    print(False)',
+      type: 'choice',
+      prompt: 'Що виведе цей код для N=10?',
+      code: 'n = 10\nif (n - 1) % 3 == 0:\n    print((n - 1) // 3)\nelse:\n    print(False)',
       options: ['False', '3', '9', '3.0'],
       correct: 1,
-      explanation: '(10−1)=9, 9%3=0 → X цілий. X=9//3=3. Виводиться ціле 3 (не 3.0, бо // дає int).'
+      explain: '(10−1)=9, 9 % 3 = 0 → умова істинна. 9 // 3 = 3. Виводиться ціле 3 (не 3.0, бо // дає int).'
     },
+
+    // 9 — input (гілка else)
     {
-      module: 4, moduleLabel: '#4 (N−1)/3',
-      question: 'Що виведе Задача #4 для N=11?',
-      code: 'n = 11\nif (n-1) % 3 == 0:\n    print((n-1)//3)\nelse:\n    print(False)',
-      options: ['False', '3', '10', '3.33'],
-      correct: 0,
-      explanation: '(11−1)=10, 10%3=1 (не ділиться) → умова хибна → гілка else → виводиться False.'
+      type: 'input',
+      prompt: 'Введи, що виведе код для N=11:',
+      code: 'n = 11\nif (n - 1) % 3 == 0:\n    print((n - 1) // 3)\nelse:\n    print(False)',
+      answer: 'False',
+      accept: ['false'],
+      explain: '(11−1)=10, 10 % 3 = 1 (не ділиться) → умова хибна → гілка else → виводиться False.'
     },
+
+    // 10 — choice (для якого N → False)
     {
-      module: 4, moduleLabel: '#4 (N−1)/3',
-      question: 'Що виведе Задача #4 для N=22?',
-      code: 'n = 22',
-      options: ['7', 'False', '21', '8'],
-      correct: 0,
-      explanation: '(22−1)=21, 21%3=0 → ділиться. X=21//3=7. Виводиться 7.'
-    },
-    {
-      module: 4, moduleLabel: '#4 (N−1)/3',
-      question: 'Для якого з цих N Задача #4 виведе False?',
+      type: 'choice',
+      prompt: 'Для якого з цих значень N код виведе False?',
+      code: 'if (n - 1) % 3 == 0:\n    print((n - 1) // 3)\nelse:\n    print(False)',
       options: ['N=7', 'N=13', 'N=5', 'N=4'],
       correct: 2,
-      explanation: 'False коли (N−1) НЕ кратне 3. N=5: 4%3=1 → False. А 7→6, 13→12, 4→3 — усі кратні 3.'
+      explain: 'False, коли (N−1) НЕ кратне 3. N=5: 4 % 3 = 1 → False. А 7→6, 13→12, 4→3 — усі кратні 3.'
     },
+
+    // 11 — indent (if / else)
     {
-      module: 1, moduleLabel: '#1 Куб−Квадрат',
-      question: 'Фінальна перевірка: що виведе Задача #1 для N=3?',
-      code: 'n = 3\nprint(abs(n**3 - n**2))',
-      options: ['18', '9', '27', '12'],
-      correct: 0,
-      explanation: '3³=27, 3²=9, різниця 27−9=18. Відповідь 18.'
+      type: 'indent',
+      prompt: 'Постав правильні відступи, щоб умова працювала:',
+      lines: [
+        { t: 'if (n - 1) % 3 == 0:', lvl: 0 },
+        { t: 'print((n - 1) // 3)',  lvl: 1 },
+        { t: 'else:',                lvl: 0 },
+        { t: 'print(False)',         lvl: 1 }
+      ],
+      explain: 'if та else — на нульовому рівні. Те, що виконується всередині кожної гілки — з відступом у один рівень (4 пробіли).'
+    },
+
+    // 12 — order (фінал)
+    {
+      type: 'order',
+      prompt: 'Збери програму: вивести (N−1)//3, якщо ділиться на 3, інакше False:',
+      lines: [
+        'n = int(input())',
+        'if (n - 1) % 3 == 0:',
+        '    print((n - 1) // 3)',
+        'else:',
+        '    print(False)'
+      ],
+      explain: 'Спершу зчитуємо N. Потім перевіряємо кратність 3. Гілка if виводить частку, else — False. Порядок рядків важливий!'
     }
+
   ]
 };
