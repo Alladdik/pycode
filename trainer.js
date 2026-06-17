@@ -38,9 +38,9 @@
   class CP{ constructor(){ this.x=Math.random()*cvs.width; this.y=Math.random()*-cvs.height-20; this.w=Math.random()*9+4; this.h=Math.random()*5+3; this.c=`hsl(${Math.random()*360},78%,62%)`; this.vx=Math.random()*4-2; this.vy=Math.random()*5+3; this.r=Math.random()*360; this.rv=Math.random()*8-4; }
     step(){ this.x+=this.vx;this.y+=this.vy;this.r+=this.rv; }
     draw(){ cx.save();cx.translate(this.x,this.y);cx.rotate(this.r*Math.PI/180);cx.fillStyle=this.c;cx.fillRect(-this.w/2,-this.h/2,this.w,this.h);cx.restore(); } }
-  function boom(n=140){ if(cId)cancelAnimationFrame(cId); cPts=Array.from({length:n},()=>new CP());
+  function boom(n=140){ cvs.style.display='block'; if(cId)cancelAnimationFrame(cId); cPts=Array.from({length:n},()=>new CP());
     (function loop(){ cx.clearRect(0,0,cvs.width,cvs.height); cPts.forEach(p=>{p.step();p.draw();}); cPts=cPts.filter(p=>p.y<cvs.height+20);
-      if(cPts.length)cId=requestAnimationFrame(loop); else cx.clearRect(0,0,cvs.width,cvs.height); })(); }
+      if(cPts.length)cId=requestAnimationFrame(loop); else { cx.clearRect(0,0,cvs.width,cvs.height); cvs.style.display='none'; } })(); }
 
   // ── State ──
   const EX = cfg.exercises, N = EX.length;

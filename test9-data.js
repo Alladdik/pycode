@@ -1,6 +1,6 @@
 // TRAINER 9 — Duolingo-стиль (після Модуля 9): чистий код, іменування, коментарі
 // Типи вправ: choice | input | fill | indent | order
-const quizData = {
+var quizData = {
   title: 'Тренажер: Чистий код',
   subtitle: '12 коротких вправ у стилі Duolingo — після Модуля 9',
   hero: '✨',

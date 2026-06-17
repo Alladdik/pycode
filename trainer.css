@@ -1,6 +1,7 @@
 /* ── Duolingo-стиль тренажер: спільні стилі (test7/8/9) ── */
 body { overflow-y: auto; }
 .app-container { height: auto; min-height: 100vh; }
+#confetti-canvas { display: none; }
 .quiz-main { flex: 1; display: flex; align-items: flex-start; justify-content: center; padding: 1.4rem 1rem 3rem; }
 .quiz-wrap { width: 100%; max-width: 660px; }
 .quiz-screen { display: none; }
