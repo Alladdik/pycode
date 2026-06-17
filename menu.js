@@ -12,7 +12,8 @@
     ['lesson6.html', 'М6 · Функції чисел'],
     ['lesson7.html', 'М7 · Задачі #1, #4'],
     ['lesson8.html', 'М8 · Задачі #2, #3, #5'],
-    ['lesson9.html', 'М9 · Чистий код']
+    ['lesson9.html', 'М9 · Чистий код'],
+    ['homework.html', '🏠 Домашка · 5 задач']
   ];
   const TESTS = [
     ['test4.html', '📝 Тест 1–4'],
